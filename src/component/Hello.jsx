@@ -4,8 +4,9 @@ import axios from 'axios';
 const Hello = () => {
     const [requests, setRequests] = useState([]);
     const [userInput, setUserInput] = useState('');
-    const [trackingUuid, setTrackingUuid] = useState('');
-    const [lookUpResult, setLookUpResult] = useState('');
+
+    const url = 'https://blackjack-service-render.onrender.com';
+    // const url = 'http://localhost:8080';
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -19,14 +20,8 @@ const Hello = () => {
         setUserInput(event.target.value);
     };
 
-    const handleTrackingUuidChange = (event) => {
-        setTrackingUuid(event.target.value);
-    };
-
     const handleSubmitRequest = async () => {
-        const url = 'https://blackjack-service-render.onrender.com/add-to-queue';
-        const testUrl = 'http://localhost:8080/add-to-queue'
-        const response = await axios.post(testUrl, {}, {
+        const response = await axios.post(url + '/add-to-queue', {}, {
             params: {
                 'number': Number(userInput)
             }
@@ -40,12 +35,9 @@ const Hello = () => {
     };
 
     const handleLookUp = async () => {
-        const url = 'https://blackjack-service-render.onrender.com/add-to-queue';
-        const testUrl = 'http://localhost:8080/check';
-
         const newArr = await Promise.all(requests.map(async r => {
             console.log(r);
-            const response = await axios.post(testUrl, {}, {
+            const response = await axios.post(url + '/check/', {}, {
                 params: {
                     'trackingUuid': r.trackingUuid  // Assuming `trackingUuid` is part of each request object
                 }
@@ -64,9 +56,7 @@ const Hello = () => {
     };
 
     const handleStop = async (trackingUuid) => {
-        const url = 'https://blackjack-service-render.onrender.com/add-to-queue';
-        const testUrl = 'http://localhost:8080/stop';
-        const response = await axios.post(testUrl, {}, {
+        await axios.post(url + '/stop', {}, {
             params: {
                 'trackingUuid': trackingUuid  // Assuming `trackingUuid` is part of each request object
             }
@@ -85,17 +75,6 @@ const Hello = () => {
         <button onClick={handleSubmitRequest}>
             Click me
         </button>
-        <label>
-            Enter a trackingUuid:
-            <input
-                value={trackingUuid}
-                onChange={handleTrackingUuidChange}
-            />
-        </label>
-        <button onClick={handleLookUp}>
-            Click me
-        </button>
-        <p>look up result: {lookUpResult}</p>
         {requests.map((r, index) =>
             <div key={index}>
                 <p>{r.trackingUuid} {r.userInput} {r.requestStatus}</p>
@@ -105,14 +84,6 @@ const Hello = () => {
             </div>
         )}
     </div>;
-}
-
-
-
-const fetchHelloWorldServer = async () => {
-    const url = 'https://blackjack-service-render.onrender.com/hello';
-    const response = await axios.get(url);
-    return response.data;
 }
 
 export default Hello;
