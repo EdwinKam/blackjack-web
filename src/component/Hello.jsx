@@ -5,8 +5,8 @@ const Hello = () => {
     const [requests, setRequests] = useState([]);
     const [userInput, setUserInput] = useState('');
 
-    const url = 'https://blackjack-service-render.onrender.com';
-    // const url = 'http://localhost:8080';
+    const url = 'https://blackjack-service-render.onrender.com/blackjack';
+    // const url = 'http://localhost:8080/blackjack';
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -14,16 +14,16 @@ const Hello = () => {
         }, 1000);
 
         return () => clearInterval(intervalId); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
-    }, [requests]);
+    });
 
     const handleChange = (event) => {
         setUserInput(event.target.value);
     };
 
     const handleSubmitRequest = async () => {
-        const response = await axios.post(url + '/add-to-queue', {}, {
+        const response = await axios.post(url + '/simulateRequest', {}, {
             params: {
-                'number': Number(userInput)
+                'numOfGame': Number(userInput)
             }
         });
         setRequests(prevData => [...prevData,
@@ -36,8 +36,7 @@ const Hello = () => {
 
     const handleLookUp = async () => {
         const newArr = await Promise.all(requests.map(async r => {
-            console.log(r);
-            const response = await axios.post(url + '/check/', {}, {
+            const response = await axios.post(url + '/checkProgress/', {}, {
                 params: {
                     'trackingUuid': r.trackingUuid  // Assuming `trackingUuid` is part of each request object
                 }
@@ -50,18 +49,19 @@ const Hello = () => {
             };
         }));
 
-        console.log(newArr);
-
         setRequests(newArr);
     };
 
     const handleStop = async (trackingUuid) => {
-        await axios.post(url + '/stop', {}, {
-            params: {
-                'trackingUuid': trackingUuid  // Assuming `trackingUuid` is part of each request object
-            }
-        });
-    }
+        const response = await axios.post(url + '/checkResult/', {}, {
+                params: {
+                    'trackingUuid': trackingUuid  // Assuming `trackingUuid` is part of each request object
+                }
+            });
+
+            console.log(response.data);
+    };
+    
 
     return <div>
         <label>
@@ -79,7 +79,7 @@ const Hello = () => {
             <div key={index}>
                 <p>{r.trackingUuid} {r.userInput} {r.requestStatus}</p>
                 <button onClick={() => handleStop(r.trackingUuid)}>
-                    stop
+                    check result
                 </button>
             </div>
         )}
