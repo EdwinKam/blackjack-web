@@ -4,12 +4,18 @@ type Hand = Card[];
 
 export class PlayerHand {
   private hands: Hand[] = [];
+  public baseBetRatio: number[] = [1];
 
   public constructor() {
     this.hands = [[]];
   }
 
-  public addCard(card: Card, handNumber: number): void {
+  public hitCard(card: Card, handNumber: number): void {
+    this.hands[handNumber].push(card);
+  }
+
+  public doubleCard(card: Card, handNumber: number): void {
+    this.baseBetRatio[handNumber] = 2;
     this.hands[handNumber].push(card);
   }
 
@@ -66,6 +72,7 @@ export class PlayerHand {
   public splitHand(handNumber: number): void {
     const card = this.hands[handNumber].pop() as Card;
     this.hands.push([card]);
+    this.baseBetRatio.push(1);
   }
 
   public getHandsCount(): number {
@@ -73,8 +80,18 @@ export class PlayerHand {
   }
 
   public toString(): string {
-    return this.hands
-      .map((hand) => hand.map((card) => card.toString()).join(", "))
-      .join(" | ");
+    return (
+      this.hands
+        .map((hand) => hand.map((card) => card.toString()).join(", "))
+        .join(" | ") + ` (${this.getSum(0)})`
+    );
+  }
+
+  public getBaseBetRatio(handNumber: number): number {
+    return this.baseBetRatio[handNumber];
+  }
+
+  public onlyHasOneCard(handNumber: number): boolean {
+    return this.hands[handNumber].length === 1;
   }
 }

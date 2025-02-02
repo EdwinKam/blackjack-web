@@ -49,6 +49,9 @@ export class DealerHand {
   }
 
   public toString(): string {
-    return this.hand.map((card) => card.toString()).join(", ");
+    return (
+      this.hand.map((card) => card.toString()).join(", ") +
+      ` (${this.getSum()})`
+    );
   }
 }

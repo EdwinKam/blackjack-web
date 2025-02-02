@@ -14,9 +14,9 @@ export default function runGame(cardDistributor: CardDistributor): GameResult {
   const dealerHand = new DealerHand();
   const playerHand = new PlayerHand();
 
-  playerHand.addCard(cardDistributor.dealCard(), 0);
+  playerHand.hitCard(cardDistributor.dealCard(), 0);
   dealerHand.addCard(cardDistributor.dealCard());
-  playerHand.addCard(cardDistributor.dealCard(), 0);
+  playerHand.hitCard(cardDistributor.dealCard(), 0);
   dealerHand.addCard(cardDistributor.dealCard());
 
   if (playerHand.isBlackjack(0) && dealerHand.isBlackjack()) {
@@ -30,21 +30,24 @@ export default function runGame(cardDistributor: CardDistributor): GameResult {
   let playHandCount = 1;
   let totleWin = 0;
   let haha = 0;
+  let atLeastOneHandNotBusted = false;
 
   for (let handNumber = 0; handNumber < playHandCount; handNumber++) {
-    let playBaseBetRatio = 1;
     let playAction;
     do {
+      if (playerHand.onlyHasOneCard(handNumber)) {
+        // could happen after the player split
+        playerHand.hitCard(cardDistributor.dealCard(), handNumber);
+      }
       playAction = getPlayAction(playerHand, dealerHand, handNumber);
       switch (playAction) {
         case BlackjackAction.Hit:
-          playerHand.addCard(cardDistributor.dealCard(), handNumber);
+          playerHand.hitCard(cardDistributor.dealCard(), handNumber);
           break;
         case BlackjackAction.Stand:
           break;
         case BlackjackAction.Double:
-          playerHand.addCard(cardDistributor.dealCard(), handNumber);
-          playBaseBetRatio = 2;
+          playerHand.doubleCard(cardDistributor.dealCard(), handNumber);
           break;
         case BlackjackAction.Split:
           playerHand.splitHand(handNumber);
@@ -59,9 +62,23 @@ export default function runGame(cardDistributor: CardDistributor): GameResult {
       haha++ < 20
     );
 
-    // check if player bust
-    if (playerHand.getSum(handNumber) > 21) {
-      totleWin -= playBaseBetRatio;
+    if (playerHand.getSum(handNumber) <= 21) {
+      atLeastOneHandNotBusted = true;
+    }
+  }
+
+  if (atLeastOneHandNotBusted) {
+    dealerHand.addCardUntil17(cardDistributor);
+    for (let handNumber = 0; handNumber < playHandCount; handNumber++) {
+      if (playerHand.getSum(handNumber) > 21) {
+        totleWin -= playerHand.getBaseBetRatio(handNumber);
+      } else if (dealerHand.getSum() > 21) {
+        totleWin += playerHand.getBaseBetRatio(handNumber);
+      } else if (playerHand.getSum(handNumber) > dealerHand.getSum()) {
+        totleWin += playerHand.getBaseBetRatio(handNumber);
+      } else if (playerHand.getSum(handNumber) < dealerHand.getSum()) {
+        totleWin -= playerHand.getBaseBetRatio(handNumber);
+      }
     }
   }
   return { playerHand, dealerHand, playerWin: totleWin };
