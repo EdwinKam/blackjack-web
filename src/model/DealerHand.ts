@@ -43,4 +43,8 @@ export class DealerHand {
     }
     return sum;
   }
+
+  public isBlackjack(): boolean {
+    return this.hand.length === 2 && this.getSum() === 21;
+  }
 }
