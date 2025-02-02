@@ -1,5 +1,6 @@
 import { CardDistributor } from "../model/CardDistributor";
 import runGame from "./gameRunner";
+import { StrategyService } from "./strategyService";
 
 export class Simulator {
   public progressPercent: number = 0;
@@ -13,6 +14,7 @@ export class Simulator {
   ): Promise<number> {
     return new Promise((resolve) => {
       const cards = new CardDistributor(cutOff, numberOfDecks);
+      const strategy = new StrategyService();
       cards.shuffle();
       let totalWin = 0;
       let i = 0;
@@ -22,7 +24,7 @@ export class Simulator {
         const end = Math.min(i + batchSize, totalGame);
 
         for (; i < end; i++) {
-          const game = runGame(cards);
+          const game = runGame(cards, strategy);
           totalWin += game.playerWin;
 
           if (i % Math.floor(totalGame / 100) === 0) {

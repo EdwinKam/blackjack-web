@@ -1,16 +1,18 @@
-import { getPlayAction } from "../../src/service/strategyService";
 import { PlayerHand } from "../../src/model/PlayerHand";
 import { DealerHand } from "../../src/model/DealerHand";
 import { Card } from "../../src/model/Card";
 import { BlackjackAction } from "../../src/model/BlackjackAction";
+import { StrategyService } from "../../src/service/strategyService"; // Import the class
 
 describe("getPlayAction", () => {
   let playerHand: PlayerHand;
   let dealerHand: DealerHand;
+  let strategyService: StrategyService;
 
   beforeEach(() => {
     playerHand = new PlayerHand();
     dealerHand = new DealerHand();
+    strategyService = new StrategyService(); // Create an instance of StrategyService
   });
 
   it("should return Stand for a player blackjack", () => {
@@ -18,7 +20,7 @@ describe("getPlayAction", () => {
     playerHand.hitCard(new Card(10), 0); // 10
     dealerHand.addCard(new Card(5)); // Dealer's face-up card
 
-    const action = getPlayAction(playerHand, dealerHand, 0);
+    const action = strategyService.getPlayAction(playerHand, dealerHand, 0);
     expect(action).toBe(BlackjackAction.Stand);
   });
 
@@ -27,7 +29,7 @@ describe("getPlayAction", () => {
     playerHand.hitCard(new Card(3), 0);
     dealerHand.addCard(new Card(10)); // Dealer's face-up card
 
-    const action = getPlayAction(playerHand, dealerHand, 0);
+    const action = strategyService.getPlayAction(playerHand, dealerHand, 0);
     expect(action).toBe(BlackjackAction.Hit);
   });
 
@@ -36,7 +38,7 @@ describe("getPlayAction", () => {
     playerHand.hitCard(new Card(5), 0);
     dealerHand.addCard(new Card(6)); // Dealer's face-up card
 
-    const action = getPlayAction(playerHand, dealerHand, 0);
+    const action = strategyService.getPlayAction(playerHand, dealerHand, 0);
     expect(action).toBe(BlackjackAction.Double);
   });
 
@@ -45,7 +47,7 @@ describe("getPlayAction", () => {
     playerHand.hitCard(new Card(8), 0);
     dealerHand.addCard(new Card(5)); // Dealer's face-up card
 
-    const action = getPlayAction(playerHand, dealerHand, 0);
+    const action = strategyService.getPlayAction(playerHand, dealerHand, 0);
     expect(action).toBe(BlackjackAction.Split);
   });
 
@@ -54,7 +56,7 @@ describe("getPlayAction", () => {
     playerHand.hitCard(new Card(7), 0);
     dealerHand.addCard(new Card(2)); // Dealer's face-up card
 
-    const action = getPlayAction(playerHand, dealerHand, 0);
+    const action = strategyService.getPlayAction(playerHand, dealerHand, 0);
     expect(action).toBe(BlackjackAction.Stand);
   });
 });
@@ -62,10 +64,12 @@ describe("getPlayAction", () => {
 describe("getPlayAction - Edge Cases", () => {
   let playerHand: PlayerHand;
   let dealerHand: DealerHand;
+  let strategyService: StrategyService;
 
   beforeEach(() => {
     playerHand = new PlayerHand();
     dealerHand = new DealerHand();
+    strategyService = new StrategyService(); // Create an instance of StrategyService
   });
 
   it("should handle a hand with more than two cards", () => {
@@ -75,7 +79,7 @@ describe("getPlayAction - Edge Cases", () => {
     playerHand.hitCard(new Card(5), 0);
     dealerHand.addCard(new Card(10)); // Dealer's face-up card
 
-    const action = getPlayAction(playerHand, dealerHand, 0);
+    const action = strategyService.getPlayAction(playerHand, dealerHand, 0);
     expect(action).toBe(BlackjackAction.Hit); // Assuming strategy for sum 14 against 10 is Hit
   });
 
@@ -84,7 +88,7 @@ describe("getPlayAction - Edge Cases", () => {
     playerHand.hitCard(new Card(8), 0);
     dealerHand.addCard(new Card(5)); // Dealer's face-up card
 
-    const action1 = getPlayAction(playerHand, dealerHand, 0);
+    const action1 = strategyService.getPlayAction(playerHand, dealerHand, 0);
 
     expect(action1).toBe(BlackjackAction.Split);
   });
@@ -95,7 +99,9 @@ describe("getPlayAction - Edge Cases", () => {
     dealerHand.addCard(new Card(6)); // Dealer's face-up card
 
     // Attempt to access a non-existent hand
-    expect(() => getPlayAction(playerHand, dealerHand, 1)).toThrowError();
+    expect(() =>
+      strategyService.getPlayAction(playerHand, dealerHand, 1)
+    ).toThrowError();
   });
 
   it("should handle a hand with multiple Aces correctly", () => {
@@ -104,17 +110,17 @@ describe("getPlayAction - Edge Cases", () => {
     playerHand.hitCard(new Card(9), 0);
     dealerHand.addCard(new Card(7)); // Dealer's face-up card
 
-    const action = getPlayAction(playerHand, dealerHand, 0);
+    const action = strategyService.getPlayAction(playerHand, dealerHand, 0);
     expect(action).toBe(BlackjackAction.Stand); // Assuming strategy for soft 21 is Stand
   });
 
   it("should handle a hand with a bust scenario", () => {
-    playerHand.hitCard(new Card(11), 0);
-    playerHand.hitCard(new Card(11), 0);
+    playerHand.hitCard(new Card(10), 0);
+    playerHand.hitCard(new Card(10), 0);
     playerHand.hitCard(new Card(5), 0);
     dealerHand.addCard(new Card(6)); // Dealer's face-up card
 
-    const action = getPlayAction(playerHand, dealerHand, 0);
+    const action = strategyService.getPlayAction(playerHand, dealerHand, 0);
     expect(action).toBe(BlackjackAction.Stand); // Assuming strategy for bust is Stand
   });
 });
