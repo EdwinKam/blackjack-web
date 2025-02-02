@@ -68,9 +68,8 @@ export function getPlayAction(
   dealerHand: DealerHand,
   handNumber: number
 ): BlackjackAction {
-  const playerSum = playerHand.getSum(0);
+  const playerSum = playerHand.getSum(handNumber);
   const dealerFaceUpCard = dealerHand.getFaceUpCard().getValue();
-
   if (playerHand.getSum(handNumber) >= 21) {
     return BlackjackAction.Stand;
   }

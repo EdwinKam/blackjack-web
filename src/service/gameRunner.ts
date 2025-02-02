@@ -28,11 +28,14 @@ export default function runGame(cardDistributor: CardDistributor): GameResult {
   }
 
   let playHandCount = 1;
-  let playBaseBetRatio = 1;
+  let totleWin = 0;
+  let haha = 0;
 
   for (let handNumber = 0; handNumber < playHandCount; handNumber++) {
-    const playAction = getPlayAction(playerHand, dealerHand, handNumber);
+    let playBaseBetRatio = 1;
+    let playAction;
     do {
+      playAction = getPlayAction(playerHand, dealerHand, handNumber);
       switch (playAction) {
         case BlackjackAction.Hit:
           playerHand.addCard(cardDistributor.dealCard(), handNumber);
@@ -51,9 +54,15 @@ export default function runGame(cardDistributor: CardDistributor): GameResult {
           throw new Error(`Invalid action: ${playAction}`);
       }
     } while (
-      playAction !== BlackjackAction.Stand ||
-      playAction !== BlackjackAction.Double
+      playAction !== BlackjackAction.Stand &&
+      playAction !== BlackjackAction.Double &&
+      haha++ < 20
     );
-    return { playerHand, dealerHand, playerWin: 0 };
+
+    // check if player bust
+    if (playerHand.getSum(handNumber) > 21) {
+      totleWin -= playBaseBetRatio;
+    }
   }
+  return { playerHand, dealerHand, playerWin: totleWin };
 }

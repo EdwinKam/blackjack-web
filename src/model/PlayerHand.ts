@@ -71,4 +71,10 @@ export class PlayerHand {
   public getHandsCount(): number {
     return this.hands.length;
   }
+
+  public toString(): string {
+    return this.hands
+      .map((hand) => hand.map((card) => card.toString()).join(", "))
+      .join(" | ");
+  }
 }

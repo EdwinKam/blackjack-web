@@ -47,4 +47,8 @@ export class DealerHand {
   public isBlackjack(): boolean {
     return this.hand.length === 2 && this.getSum() === 21;
   }
+
+  public toString(): string {
+    return this.hand.map((card) => card.toString()).join(", ");
+  }
 }
