@@ -1,8 +1,9 @@
+import { BlackjackAction } from "../model/BlackjackAction";
 import { DealerHand } from "../model/DealerHand";
 import { PlayerHand } from "../model/PlayerHand";
 
 const blackjackStrategy: string[][] = [
-  // Dealer's face-up card: 11 (Ace), 2, 3, 4, 5, 6, 7, 8, 9, 10
+  // A   2,   3,   4,   5,   6,   7,   8,   9,  10
   ["H", "H", "H", "D", "D", "H", "H", "H", "H", "H"], // Player sum 8
   ["H", "D", "D", "D", "D", "D", "H", "H", "H", "H"], // Player sum 9
   ["H", "D", "D", "D", "D", "D", "D", "D", "H", "H"], // Player sum 10
@@ -41,13 +42,6 @@ const pairStrategy: string[][] = [
   ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], // Pair of 10s
 ];
 
-export enum BlackjackAction {
-  Hit = "Hit",
-  Stand = "Stand",
-  Double = "Double",
-  Split = "Split",
-}
-
 function getBlackjackAction(action: string): BlackjackAction {
   switch (action) {
     case "H":
@@ -70,8 +64,6 @@ export function getPlayAction(
 ): BlackjackAction {
   const playerSum = playerHand.getSum(handNumber);
   const dealerFaceUpCard = dealerHand.getFaceUpCard().getValue();
-  console.log("playerhand", playerHand.toString());
-  console.log("dealerhand", dealerHand.toString());
   if (playerHand.getSum(handNumber) >= 21) {
     return BlackjackAction.Stand;
   }
@@ -79,7 +71,7 @@ export function getPlayAction(
   if (playerHand.hasPair(handNumber)) {
     const pairValue = playerHand.getPairCard(handNumber).getValue();
     const pairIndex = pairValue - 1;
-    console.log(`checking pairStrategy[${pairIndex}][${dealerFaceUpCard - 1}]`);
+    // console.log(`checking pairStrategy[${pairIndex}][${dealerFaceUpCard - 1}]`);
     const action = pairStrategy[pairIndex][dealerFaceUpCard - 1];
     return getBlackjackAction(action);
   }
@@ -89,11 +81,11 @@ export function getPlayAction(
     playerHand.getValueWithoutAce(handNumber) <= 9
   ) {
     const valueWithoutAce = playerHand.getValueWithoutAce(handNumber);
-    console.log(
-      `checking softHandStrategry[${valueWithoutAce - 2}][${
-        dealerFaceUpCard - 1
-      }]`
-    );
+    // console.log(
+    //   `checking softHandStrategry[${valueWithoutAce - 2}][${
+    //     dealerFaceUpCard - 1
+    //   }]`
+    // );
     const action = softHandStrategy[valueWithoutAce - 2][dealerFaceUpCard - 1];
     return getBlackjackAction(action);
   }
@@ -103,9 +95,9 @@ export function getPlayAction(
   } else if (playerSum > 17) {
     return BlackjackAction.Stand;
   }
-  console.log(
-    `checking blackjackStrategy[${playerSum - 8}][${dealerFaceUpCard - 1}]`
-  );
+  //   console.log(
+  //     `checking blackjackStrategy[${playerSum - 8}][${dealerFaceUpCard - 1}]`
+  //   );
   const action = blackjackStrategy[playerSum - 8][dealerFaceUpCard - 1];
   return getBlackjackAction(action);
 }

@@ -1,10 +1,8 @@
-import {
-  getPlayAction,
-  BlackjackAction,
-} from "../../src/service/strategyService";
+import { getPlayAction } from "../../src/service/strategyService";
 import { PlayerHand } from "../../src/model/PlayerHand";
 import { DealerHand } from "../../src/model/DealerHand";
 import { Card } from "../../src/model/Card";
+import { BlackjackAction } from "../../src/model/BlackjackAction";
 
 describe("getPlayAction", () => {
   let playerHand: PlayerHand;

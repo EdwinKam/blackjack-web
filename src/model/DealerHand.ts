@@ -17,7 +17,7 @@ export class DealerHand {
   }
 
   public addCardUntil17(cardDistributor: CardDistributor): void {
-    while (this.getSum() < 17 && !this.isSoft17) {
+    while (this.getSum() < 17 || this.isSoft17()) {
       this.addCard(cardDistributor.dealCard());
     }
   }

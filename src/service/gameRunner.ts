@@ -1,7 +1,8 @@
+import { BlackjackAction } from "../model/BlackjackAction";
 import { CardDistributor } from "../model/CardDistributor";
 import { DealerHand } from "../model/DealerHand";
 import { PlayerHand } from "../model/PlayerHand";
-import { BlackjackAction, getPlayAction } from "./strategyService";
+import { getPlayAction } from "./strategyService";
 
 export interface GameResult {
   playerHand: PlayerHand;
@@ -28,7 +29,7 @@ export default function runGame(cardDistributor: CardDistributor): GameResult {
   }
 
   let playHandCount = 1;
-  let totleWin = 0;
+  let totalWin = 0;
   let haha = 0;
   let atLeastOneHandNotBusted = false;
 
@@ -69,17 +70,18 @@ export default function runGame(cardDistributor: CardDistributor): GameResult {
 
   if (atLeastOneHandNotBusted) {
     dealerHand.addCardUntil17(cardDistributor);
-    for (let handNumber = 0; handNumber < playHandCount; handNumber++) {
-      if (playerHand.getSum(handNumber) > 21) {
-        totleWin -= playerHand.getBaseBetRatio(handNumber);
-      } else if (dealerHand.getSum() > 21) {
-        totleWin += playerHand.getBaseBetRatio(handNumber);
-      } else if (playerHand.getSum(handNumber) > dealerHand.getSum()) {
-        totleWin += playerHand.getBaseBetRatio(handNumber);
-      } else if (playerHand.getSum(handNumber) < dealerHand.getSum()) {
-        totleWin -= playerHand.getBaseBetRatio(handNumber);
-      }
+  }
+  for (let handNumber = 0; handNumber < playHandCount; handNumber++) {
+    if (playerHand.getSum(handNumber) > 21) {
+      totalWin -= playerHand.getBaseBetRatio(handNumber);
+    } else if (dealerHand.getSum() > 21) {
+      totalWin += playerHand.getBaseBetRatio(handNumber);
+    } else if (playerHand.getSum(handNumber) > dealerHand.getSum()) {
+      totalWin += playerHand.getBaseBetRatio(handNumber);
+    } else if (playerHand.getSum(handNumber) < dealerHand.getSum()) {
+      totalWin -= playerHand.getBaseBetRatio(handNumber);
     }
   }
-  return { playerHand, dealerHand, playerWin: totleWin };
+
+  return { playerHand, dealerHand, playerWin: totalWin };
 }
