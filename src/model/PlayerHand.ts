@@ -1,17 +1,16 @@
 import { Card } from "./Card";
-import { CardDistributor } from "./CardDistributor";
 
 type Hand = Card[];
 
-export class DealerHand {
+export class PlayerHand {
   private hands: Hand[] = [];
 
   public constructor() {
     this.hands = [[]];
   }
 
-  public addCard(card: Card): void {
-    this.hands[0].push(card);
+  public addCard(card: Card, handNumber: number): void {
+    this.hands[handNumber].push(card);
   }
 
   public getSum(handNumber: number): number {
