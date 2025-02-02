@@ -1,41 +1,8 @@
 import { Card } from "./Card";
 import { CardDistributor } from "./CardDistributor";
-interface Hand {
-  hand: Card[];
-  addCard(card: Card): void;
-  getSum(): number;
-}
 
-export class PlayerHand implements Hand {
-  public hand: Card[] = [];
-
-  public constructor() {
-    this.hand = [];
-  }
-
-  public addCard(card: Card): void {
-    this.hand.push(card);
-  }
-
-  public getSum(): number {
-    let sum = 0;
-    let aceCount = 0;
-    for (let i = 0; i < this.hand.length; i++) {
-      if (this.hand[i].getValue() === 1) {
-        aceCount++;
-      }
-      sum += this.hand[i].getValue();
-    }
-    while (sum <= 11 && aceCount > 0) {
-      sum += 10;
-      aceCount--;
-    }
-    return sum;
-  }
-}
-
-export class DealerHand implements Hand {
-  public hand: Card[];
+export class DealerHand {
+  private hand: Card[];
 
   public constructor() {
     this.hand = [];
@@ -50,7 +17,7 @@ export class DealerHand implements Hand {
   }
 
   public addCardUntil17(cardDistributor: CardDistributor): void {
-    while (this.getSum() < 17 && !this.isSoft17()) {
+    while (this.getSum() < 17 && !this.isSoft17) {
       this.addCard(cardDistributor.dealCard());
     }
   }
