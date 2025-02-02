@@ -15,7 +15,7 @@ export class CardDistributor {
     const deck: Deck = [];
     const suits = ["Hearts", "Diamonds", "Clubs", "Spades"];
     for (let numOfDeck = 0; numOfDeck < numberOfDecks; numOfDeck++) {
-      for (const suit of suits) {
+      for (const __ of suits) {
         for (let rank = 1; rank <= 13; rank++) {
           deck.push(new Card(rank));
         }
