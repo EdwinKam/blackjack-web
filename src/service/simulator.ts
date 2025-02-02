@@ -5,21 +5,32 @@ export default function startSimulation(
   totalGame: number,
   cutOff: number,
   numberOfDecks: number
-) {
-  const cards = new CardDistributor(cutOff, numberOfDecks);
-  cards.shuffle();
-  let totalWin = 0;
-  const logInterval = totalGame / 100; // 1% of the total games
+): Promise<void> {
+  return new Promise((resolve) => {
+    const cards = new CardDistributor(cutOff, numberOfDecks);
+    cards.shuffle();
+    let totalWin = 0;
+    let i = 0;
 
-  for (let i = 0; i < totalGame; i++) {
-    if (i % logInterval === 0) {
-      console.log(`Simulation progress: ${(i / totalGame) * 100}%`);
+    // Separate function to handle the simulation loop
+    function runSimulation() {
+      if (i < totalGame) {
+        const game = runGame(cards);
+        totalWin += game.playerWin;
+        i++;
+
+        if (i % 1000 === 0) {
+          // Yield control back to the browser every 1000 iterations
+          setTimeout(runSimulation, 0);
+        } else {
+          runSimulation();
+        }
+      } else {
+        console.log(`Total win: ${(totalWin / totalGame) * 100}%`);
+        resolve(); // Resolve the promise when done
+      }
     }
-    const game = runGame(cards);
-    // console.log(game.dealerHand.toString());
-    // console.log(game.playerHand.toString());
-    // console.log(game.playerWin);
-    totalWin += game.playerWin;
-  }
-  console.log(`Total win: ${(totalWin / totalGame) * 100}%`);
+
+    runSimulation(); // Start the simulation
+  });
 }

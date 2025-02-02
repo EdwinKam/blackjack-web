@@ -2,50 +2,95 @@ import { useState } from "react";
 import startSimulation from "../service/simulator";
 
 function GameSimulator() {
-  const [numOfGames, setNumOfGames] = useState(1000);
+  const [numOfGames, setNumOfGames] = useState(10000);
   const [numOfDecks, setNumOfDecks] = useState(4);
   const [cutOffRatio, setCutOffRatio] = useState(0.75);
+  const [progress, setProgress] = useState(0);
+  const [isGameRunning, setIsGameRunning] = useState(false);
 
-  const runSimulation = () => {
-    // Placeholder for simulation logic
-    startSimulation(numOfGames, cutOffRatio, numOfDecks);
+  const runSimulation = async () => {
+    setIsGameRunning(true);
+    console.log("Starting a game");
+    await startSimulation(numOfGames, cutOffRatio, numOfDecks);
+    setIsGameRunning(false);
+  };
+
+  const incrementGames = () => {
+    setNumOfGames((prev) => Math.min(100000000, prev + 100000));
+  };
+
+  const decrementGames = () => {
+    setNumOfGames((prev) => Math.max(10000, prev - 100000));
+  };
+
+  const incrementDecks = () => {
+    setNumOfDecks((prev) => Math.min(10, prev + 1));
+  };
+
+  const decrementDecks = () => {
+    setNumOfDecks((prev) => Math.max(1, prev - 1));
+  };
+
+  const incrementCutOffRatio = () => {
+    setCutOffRatio((prev) => parseFloat(Math.min(1, prev + 0.05).toFixed(2)));
+  };
+
+  const decrementCutOffRatio = () => {
+    setCutOffRatio((prev) =>
+      parseFloat(Math.max(0.05, prev - 0.05).toFixed(2))
+    );
+  };
+
+  const buttonStyle = {
+    margin: "0 5px",
+    padding: "5px 10px",
+    fontSize: "16px",
+    cursor: "pointer",
+  };
+
+  const containerStyle = {
+    display: "flex",
+    alignItems: "center",
+    marginBottom: "10px",
   };
 
   return (
     <div>
       <h1>Blackjack Simulator</h1>
-      <div>
+      <div style={containerStyle}>
         <label htmlFor="numOfGames">Number of Games:</label>
-        <input
-          type="number"
-          id="numOfGames"
-          name="numOfGames"
-          value={numOfGames}
-          onChange={(e) => setNumOfGames(Number(e.target.value))}
-        />
+        <button onClick={decrementGames} style={buttonStyle}>
+          -
+        </button>
+        <span>{numOfGames}</span>
+        <button onClick={incrementGames} style={buttonStyle}>
+          +
+        </button>
       </div>
-      <div>
+      <div style={containerStyle}>
         <label htmlFor="numOfDecks">Number of Decks:</label>
-        <input
-          type="number"
-          id="numOfDecks"
-          name="numOfDecks"
-          value={numOfDecks}
-          onChange={(e) => setNumOfDecks(Number(e.target.value))}
-        />
+        <button onClick={decrementDecks} style={buttonStyle}>
+          -
+        </button>
+        <span>{numOfDecks}</span>
+        <button onClick={incrementDecks} style={buttonStyle}>
+          +
+        </button>
       </div>
-      <div>
+      <div style={containerStyle}>
         <label htmlFor="cutOffRatio">Cut-off Ratio:</label>
-        <input
-          type="number"
-          id="cutOffRatio"
-          name="cutOffRatio"
-          step="0.01"
-          value={cutOffRatio}
-          onChange={(e) => setCutOffRatio(Number(e.target.value))}
-        />
+        <button onClick={decrementCutOffRatio} style={buttonStyle}>
+          -
+        </button>
+        <span>{cutOffRatio.toFixed(2)}</span>
+        <button onClick={incrementCutOffRatio} style={buttonStyle}>
+          +
+        </button>
       </div>
-      <button onClick={runSimulation}>Start Simulation</button>
+      <button onClick={runSimulation} style={buttonStyle}>
+        Start Simulation
+      </button>
+      {isGameRunning && <div>Progress: {progress.toFixed(2)}%</div>}
     </div>
   );
 }
