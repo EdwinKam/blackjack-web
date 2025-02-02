@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["jest", "node"], // Include types for Jest and Node.js
+    "outDir": "./dist/tests"   // Specify a separate output directory for tests if needed
+  },
+  "include": ["tests/**/*.ts"], // Include all test files
+  "exclude": ["node_modules"]
+}
