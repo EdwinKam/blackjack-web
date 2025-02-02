@@ -1,5 +1,5 @@
-import { useState } from "react";
-import startSimulation from "../service/simulator";
+import { useEffect, useState } from "react";
+import { Simulator } from "../service/simulator";
 
 function GameSimulator() {
   const [numOfGames, setNumOfGames] = useState(10000);
@@ -7,13 +7,28 @@ function GameSimulator() {
   const [cutOffRatio, setCutOffRatio] = useState(0.75);
   const [progress, setProgress] = useState(0);
   const [isGameRunning, setIsGameRunning] = useState(false);
+  const [simulator, setSimulator] = useState<Simulator | null>(null);
 
   const runSimulation = async () => {
     setIsGameRunning(true);
     console.log("Starting a game");
-    await startSimulation(numOfGames, cutOffRatio, numOfDecks);
+    const newSimulator = new Simulator();
+    setSimulator(newSimulator);
+    await newSimulator.startSimulation(numOfGames, cutOffRatio, numOfDecks);
     setIsGameRunning(false);
   };
+
+  useEffect(() => {
+    if (isGameRunning && simulator) {
+      const updateProgress = () => {
+        setProgress(simulator.progressPercent);
+        if (simulator.progressPercent < 100) {
+          requestAnimationFrame(updateProgress);
+        }
+      };
+      updateProgress();
+    }
+  }, [isGameRunning, simulator]);
 
   const incrementGames = () => {
     setNumOfGames((prev) => Math.min(100000000, prev + 100000));
