@@ -8,13 +8,20 @@ function GameSimulator() {
   const [progress, setProgress] = useState(0);
   const [isGameRunning, setIsGameRunning] = useState(false);
   const [simulator, setSimulator] = useState<Simulator | null>(null);
+  const [gameResult, setGameResult] = useState<number | null>(null);
 
   const runSimulation = async () => {
     setIsGameRunning(true);
     console.log("Starting a game");
     const newSimulator = new Simulator();
     setSimulator(newSimulator);
-    await newSimulator.startSimulation(numOfGames, cutOffRatio, numOfDecks);
+    const result = await newSimulator.startSimulation(
+      numOfGames,
+      cutOffRatio,
+      numOfDecks
+    );
+    console.log(result + "haha");
+    setGameResult(result);
     setIsGameRunning(false);
   };
 
@@ -106,6 +113,7 @@ function GameSimulator() {
         Start Simulation
       </button>
       {isGameRunning && <div>Progress: {progress.toFixed(2)}%</div>}
+      {gameResult !== null && <div>Win rate: {gameResult.toFixed(2)}%</div>}
     </div>
   );
 }

@@ -10,7 +10,7 @@ export class Simulator {
     totalGame: number,
     cutOff: number,
     numberOfDecks: number
-  ): Promise<void> {
+  ): Promise<number> {
     return new Promise((resolve) => {
       const cards = new CardDistributor(cutOff, numberOfDecks);
       cards.shuffle();
@@ -33,8 +33,9 @@ export class Simulator {
         if (i < totalGame) {
           setTimeout(runBatch, 0); // Schedule the next batch
         } else {
-          console.log(`Total win: ${(totalWin / totalGame) * 100}%`);
-          resolve();
+          const winPercentage = (totalWin / totalGame) * 100;
+          console.log(`Total win: ${winPercentage}%`);
+          resolve(winPercentage); // Resolve the promise with the win percentage
         }
       };
 
