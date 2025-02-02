@@ -81,9 +81,11 @@ export class PlayerHand {
 
   public toString(): string {
     return (
+      "player: " +
       this.hands
         .map((hand) => hand.map((card) => card.toString()).join(", "))
-        .join(" | ") + ` (${this.getSum(0)})`
+        .join(" | ") +
+      ` (${this.getSum(0)})`
     );
   }
 

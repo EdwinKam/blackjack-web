@@ -60,6 +60,48 @@ describe("runGame", () => {
     expect(result.playerWin).toBe(-1);
   });
 
+  it("should return dealer win with blackjack", () => {
+    cardDistributor.dealCard
+      .mockReturnValueOnce(new Card(10)) // Player 10
+      .mockReturnValueOnce(new Card(9)) // Dealer 9
+      .mockReturnValueOnce(new Card(9)) // Player 9
+      .mockReturnValueOnce(new Card(10)); // Dealer 10
+
+    (getPlayAction as jest.Mock).mockReturnValue(BlackjackAction.Stand);
+
+    const result: GameResult = runGame(cardDistributor);
+
+    expect(result.playerWin).toBe(0);
+  });
+
+  it("should return dealer has higher rank", () => {
+    cardDistributor.dealCard
+      .mockReturnValueOnce(new Card(10)) // Player 10
+      .mockReturnValueOnce(new Card(9)) // Dealer 9
+      .mockReturnValueOnce(new Card(8)) // Player 8
+      .mockReturnValueOnce(new Card(10)); // Dealer 10
+
+    (getPlayAction as jest.Mock).mockReturnValue(BlackjackAction.Stand);
+
+    const result: GameResult = runGame(cardDistributor);
+
+    expect(result.playerWin).toBe(-1);
+  });
+
+  it("should return player has higher rank", () => {
+    cardDistributor.dealCard
+      .mockReturnValueOnce(new Card(10)) // Player 10
+      .mockReturnValueOnce(new Card(8)) // Dealer 8
+      .mockReturnValueOnce(new Card(9)) // Player 9
+      .mockReturnValueOnce(new Card(10)); // Dealer 10
+
+    (getPlayAction as jest.Mock).mockReturnValue(BlackjackAction.Stand);
+
+    const result: GameResult = runGame(cardDistributor);
+
+    expect(result.playerWin).toBe(1);
+  });
+
   it("should result in a player bust", () => {
     cardDistributor.dealCard
       .mockReturnValueOnce(new Card(10)) // Player 10
