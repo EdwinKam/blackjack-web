@@ -1,16 +1,19 @@
 import { CardDistributor } from "../model/CardDistributor";
 import runGame from "./gameRunner";
 
-export default function startSimulation() {
-  const cards = new CardDistributor(0.3, 5);
+export default function startSimulation(
+  totalGame: number,
+  cutOff: number,
+  numberOfDecks: number
+) {
+  const cards = new CardDistributor(cutOff, numberOfDecks);
   cards.shuffle();
   let totalWin = 0;
-  const totleGame = 10000000;
-  const logInterval = totleGame / 100; // 1% of the total games
+  const logInterval = totalGame / 100; // 1% of the total games
 
-  for (let i = 0; i < totleGame; i++) {
+  for (let i = 0; i < totalGame; i++) {
     if (i % logInterval === 0) {
-      console.log(`Simulation progress: ${(i / totleGame) * 100}%`);
+      console.log(`Simulation progress: ${(i / totalGame) * 100}%`);
     }
     const game = runGame(cards);
     // console.log(game.dealerHand.toString());
@@ -18,5 +21,5 @@ export default function startSimulation() {
     // console.log(game.playerWin);
     totalWin += game.playerWin;
   }
-  console.log(`Total win: ${(totalWin / totleGame) * 100}%`);
+  console.log(`Total win: ${(totalWin / totalGame) * 100}%`);
 }
