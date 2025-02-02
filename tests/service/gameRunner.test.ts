@@ -60,5 +60,56 @@ describe("runGame", () => {
     expect(result.playerWin).toBe(-1);
   });
 
-  // Add more tests as needed
+  it("should result in a player bust", () => {
+    cardDistributor.dealCard
+      .mockReturnValueOnce(new Card(10)) // Player 10
+      .mockReturnValueOnce(new Card(5)) // Dealer 5
+      .mockReturnValueOnce(new Card(6)) // Player 6
+      .mockReturnValueOnce(new Card(9)) // Dealer 9
+      .mockReturnValueOnce(new Card(10)); // Player hits and gets 10, busting
+
+    (getPlayAction as jest.Mock)
+      .mockReturnValueOnce(BlackjackAction.Hit) // Player hits
+      .mockReturnValueOnce(BlackjackAction.Stand); // Player stands after busting
+
+    const result: GameResult = runGame(cardDistributor);
+
+    expect(result.playerWin).toBe(-1); // Player loses due to bust
+  });
+
+  it("should result in a player split and win", () => {
+    cardDistributor.dealCard
+      .mockReturnValueOnce(new Card(8)) // Player 8
+      .mockReturnValueOnce(new Card(10)) // Dealer 10
+      .mockReturnValueOnce(new Card(8)) // Player 8
+      .mockReturnValueOnce(new Card(7)) // Dealer 7
+      .mockReturnValueOnce(new Card(10)) // First hand gets 10
+      .mockReturnValueOnce(new Card(10)); // Second hand gets 10
+
+    (getPlayAction as jest.Mock)
+      .mockReturnValueOnce(BlackjackAction.Split) // Player splits
+      .mockReturnValueOnce(BlackjackAction.Stand) // First hand stands
+      .mockReturnValueOnce(BlackjackAction.Stand); // Second hand stands
+
+    const result: GameResult = runGame(cardDistributor);
+
+    expect(result.playerWin).toBe(2); // Player wins both hands
+  });
+
+  it("should result in a player hit and win", () => {
+    cardDistributor.dealCard
+      .mockReturnValueOnce(new Card(10)) // Player 10
+      .mockReturnValueOnce(new Card(10)) // Dealer 6
+      .mockReturnValueOnce(new Card(5)) // Player 5
+      .mockReturnValueOnce(new Card(10)) // Dealer 9
+      .mockReturnValueOnce(new Card(6)); // Player hits and gets 6
+
+    (getPlayAction as jest.Mock)
+      .mockReturnValueOnce(BlackjackAction.Hit) // Player hits
+      .mockReturnValueOnce(BlackjackAction.Stand); // Player stands
+
+    const result: GameResult = runGame(cardDistributor);
+
+    expect(result.playerWin).toBe(1); // Player wins
+  });
 });
