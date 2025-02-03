@@ -1,6 +1,6 @@
-import { BlackjackAction } from "../model/BlackjackAction";
-import { DealerHand } from "../model/DealerHand";
-import { PlayerHand } from "../model/PlayerHand";
+import { BlackjackAction } from "./BlackjackAction";
+import { DealerHand } from "./DealerHand";
+import { PlayerHand } from "./PlayerHand";
 
 const defaultBlackjackStrategy: string[][] = [
   // A   2,   3,   4,   5,   6,   7,   8,   9,  10
@@ -42,7 +42,7 @@ const defaultPairStrategy: string[][] = [
   ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], // Pair of 10s
 ];
 
-export class StrategyService {
+export class ActionStrategy {
   private blackjackStrategy: string[][];
   private softHandStrategy: string[][];
   private pairStrategy: string[][];

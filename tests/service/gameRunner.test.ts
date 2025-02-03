@@ -1,12 +1,12 @@
+import { ActionStrategy } from "../../src/model/ActionStrategy";
 import { BlackjackAction } from "../../src/model/BlackjackAction";
 import { Card } from "../../src/model/Card";
 import { CardDistributor } from "../../src/model/CardDistributor";
 import runGame, { GameResult } from "../../src/service/gameRunner";
-import { StrategyService } from "../../src/service/strategyService";
 
 describe("runGame", () => {
   let cardDistributor: jest.Mocked<CardDistributor>;
-  let strategyService: jest.Mocked<StrategyService>;
+  let actionStrategy: jest.Mocked<ActionStrategy>;
 
   beforeEach(() => {
     cardDistributor = {
@@ -14,8 +14,8 @@ describe("runGame", () => {
       ifCutCardReachedThenShuffle: jest.fn(),
     } as unknown as jest.Mocked<CardDistributor>;
 
-    strategyService = new StrategyService() as jest.Mocked<StrategyService>;
-    strategyService.getPlayAction = jest.fn();
+    actionStrategy = new ActionStrategy() as jest.Mocked<ActionStrategy>;
+    actionStrategy.getPlayAction = jest.fn();
   });
 
   it("should return Stand for a player blackjack", () => {
@@ -25,9 +25,9 @@ describe("runGame", () => {
       .mockReturnValueOnce(new Card(10)) // Player 10
       .mockReturnValueOnce(new Card(9)); // Dealer 9
 
-    strategyService.getPlayAction.mockReturnValue(BlackjackAction.Stand);
+    actionStrategy.getPlayAction.mockReturnValue(BlackjackAction.Stand);
 
-    const result: GameResult = runGame(cardDistributor, strategyService);
+    const result: GameResult = runGame(cardDistributor, actionStrategy);
 
     expect(result.playerWin).toBe(1.5);
   });
@@ -39,9 +39,9 @@ describe("runGame", () => {
       .mockReturnValueOnce(new Card(10)) // Player 10
       .mockReturnValueOnce(new Card(9)); // Dealer 9
 
-    strategyService.getPlayAction.mockReturnValue(BlackjackAction.Stand);
+    actionStrategy.getPlayAction.mockReturnValue(BlackjackAction.Stand);
 
-    const result: GameResult = runGame(cardDistributor, strategyService);
+    const result: GameResult = runGame(cardDistributor, actionStrategy);
 
     expect(result.playerWin).toBe(1.5);
   });
@@ -53,14 +53,14 @@ describe("runGame", () => {
       .mockReturnValueOnce(new Card(9)) // Player 9
       .mockReturnValueOnce(new Card(10)); // Dealer 10
 
-    strategyService.getPlayAction.mockReturnValue(BlackjackAction.Stand);
+    actionStrategy.getPlayAction.mockReturnValue(BlackjackAction.Stand);
 
-    const result: GameResult = runGame(cardDistributor, strategyService);
+    const result: GameResult = runGame(cardDistributor, actionStrategy);
 
     expect(result.playerWin).toBe(-1);
   });
 
-  // Continue with the rest of your tests, ensuring each uses strategyService.getPlayAction
+  // Continue with the rest of your tests, ensuring each uses ActionStrategy.getPlayAction
 
   it("should result in a player bust", () => {
     cardDistributor.dealCard
@@ -70,11 +70,11 @@ describe("runGame", () => {
       .mockReturnValueOnce(new Card(9)) // Dealer 9
       .mockReturnValueOnce(new Card(10)); // Player hits and gets 10, busting
 
-    strategyService.getPlayAction
+    actionStrategy.getPlayAction
       .mockReturnValueOnce(BlackjackAction.Hit) // Player hits
       .mockReturnValueOnce(BlackjackAction.Stand); // Player stands after busting
 
-    const result: GameResult = runGame(cardDistributor, strategyService);
+    const result: GameResult = runGame(cardDistributor, actionStrategy);
 
     expect(result.playerWin).toBe(-1); // Player loses due to bust
   });

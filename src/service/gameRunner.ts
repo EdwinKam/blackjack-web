@@ -1,8 +1,8 @@
+import { ActionStrategy } from "../model/ActionStrategy";
 import { BlackjackAction } from "../model/BlackjackAction";
 import { CardDistributor } from "../model/CardDistributor";
 import { DealerHand } from "../model/DealerHand";
 import { PlayerHand } from "../model/PlayerHand";
-import { StrategyService } from "./strategyService";
 
 export interface GameResult {
   playerHand: PlayerHand;
@@ -12,7 +12,7 @@ export interface GameResult {
 
 export default function runGame(
   cardDistributor: CardDistributor,
-  strategyService: StrategyService
+  actionStrategy: ActionStrategy
 ): GameResult {
   cardDistributor.ifCutCardReachedThenShuffle();
   const dealerHand = new DealerHand();
@@ -43,7 +43,7 @@ export default function runGame(
         // could happen after the player split
         playerHand.hitCard(cardDistributor.dealCard(), handNumber);
       }
-      playAction = strategyService.getPlayAction(
+      playAction = actionStrategy.getPlayAction(
         playerHand,
         dealerHand,
         handNumber

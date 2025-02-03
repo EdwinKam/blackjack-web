@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Simulator } from "../service/simulator";
+import StrategyChartConfigurator from "./StrategyChartConfigurator";
 
 function GameSimulator() {
   const [numOfGames, setNumOfGames] = useState(10000);
@@ -80,6 +81,7 @@ function GameSimulator() {
     <div>
       <h1>Blackjack Simulator</h1>
       <div style={containerStyle}>
+        <StrategyChartConfigurator />
         <label htmlFor="numOfGames">Number of Games:</label>
         <button onClick={decrementGames} style={buttonStyle}>
           -
