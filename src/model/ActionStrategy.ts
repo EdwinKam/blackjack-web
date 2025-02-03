@@ -2,7 +2,7 @@ import { BlackjackAction } from "./BlackjackAction";
 import { DealerHand } from "./DealerHand";
 import { PlayerHand } from "./PlayerHand";
 
-const defaultBlackjackStrategy: string[][] = [
+export const defaultBlackjackStrategy: string[][] = [
   // A   2,   3,   4,   5,   6,   7,   8,   9,  10
   ["H", "H", "H", "D", "D", "H", "H", "H", "H", "H"], // Player sum 8
   ["H", "D", "D", "D", "D", "D", "H", "H", "H", "H"], // Player sum 9
@@ -16,7 +16,7 @@ const defaultBlackjackStrategy: string[][] = [
   ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], // Player sum 17
 ];
 
-const defaultSoftHandStrategy: string[][] = [
+export const defaultSoftHandStrategy: string[][] = [
   // A,  2  , 3,  4,     5,   6,  7,   8,   9,  10
   ["H", "H", "H", "H", "D", "D", "H", "H", "H", "H"], // Player soft 13 (A, 2)
   ["H", "H", "H", "H", "D", "D", "H", "H", "H", "H"], // Player soft 14 (A, 3)
@@ -28,7 +28,7 @@ const defaultSoftHandStrategy: string[][] = [
   ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], // Player soft 20 (A, 9)
 ];
 
-const defaultPairStrategy: string[][] = [
+export const defaultPairStrategy: string[][] = [
   // Dealer's face-up card: 11 (Ace), 2, 3, 4, 5, 6, 7, 8, 9, 10
   ["P", "P", "P", "P", "P", "P", "P", "P", "P", "P"], // Pair of Aces
   ["H", "P", "P", "P", "P", "P", "P", "H", "H", "H"], // Pair of 2s

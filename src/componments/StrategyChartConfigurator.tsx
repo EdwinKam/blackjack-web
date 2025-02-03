@@ -1,30 +1,24 @@
 import React, { useState } from "react";
 import { BlackjackAction } from "../model/BlackjackAction";
-
-type Strategy = BlackjackAction[][];
-
-const initialStrategy: Strategy = Array.from({ length: 18 }, () =>
-  Array(10).fill(BlackjackAction.Stand)
-);
+import {
+  defaultBlackjackStrategy,
+  defaultPairStrategy,
+  defaultSoftHandStrategy,
+} from "../model/ActionStrategy";
 
 function StrategyChartConfigurator() {
-  const [strategy, setStrategy] = useState<Strategy>(initialStrategy);
+  const [hardStrategy, setHardStrategy] = useState<string[][]>(
+    defaultBlackjackStrategy
+  );
+  const [softStrategy, setSoftStrategy] = useState<string[][]>(
+    defaultSoftHandStrategy
+  );
+  const [pairStrategy, setPairStrategy] =
+    useState<string[][]>(defaultPairStrategy);
 
-  const handleActionChange = (
-    row: number,
-    col: number,
-    action: BlackjackAction
-  ) => {
-    const newStrategy = strategy.map((r, i) =>
-      r.map((a, j) => (i === row && j === col ? action : a))
-    );
-    setStrategy(newStrategy);
-  };
-
-  return (
-    <div>
-      <h2>Strategy Chart Configurator</h2>
-      <table>
+  const renderStrategyTable = (strategy: string[][], labelPrefix: string) => (
+    <table>
+      {labelPrefix === "Sum" && (
         <thead>
           <tr>
             <th>Player\Dealer</th>
@@ -33,39 +27,41 @@ function StrategyChartConfigurator() {
             ))}
           </tr>
         </thead>
-        <tbody>
-          {strategy.map((row, rowIndex) => (
-            <tr key={rowIndex}>
-              <td>
-                {rowIndex < 10
-                  ? `Sum ${rowIndex + 8}`
-                  : rowIndex < 18
-                  ? `Soft ${rowIndex - 2}`
-                  : `Pair ${rowIndex - 18}`}
+      )}
+
+      <tbody>
+        {strategy.map((row, rowIndex) => (
+          <tr key={rowIndex}>
+            <td>
+              {labelPrefix === "Sum"
+                ? `${rowIndex + 8}`
+                : labelPrefix === "Soft"
+                ? `A${rowIndex + 2}`
+                : `${rowIndex + 1},${rowIndex + 1}`}{" "}
+            </td>
+            {row.map((action, colIndex) => (
+              <td key={colIndex}>
+                <select value={action} disabled>
+                  <option value={BlackjackAction.Hit}>H</option>
+                  <option value={BlackjackAction.Stand}>S</option>
+                  <option value={BlackjackAction.Double}>D</option>
+                  <option value={BlackjackAction.Split}>P</option>
+                </select>
               </td>
-              {row.map((action, colIndex) => (
-                <td key={colIndex}>
-                  <select
-                    value={action}
-                    onChange={(e) =>
-                      handleActionChange(
-                        rowIndex,
-                        colIndex,
-                        e.target.value as BlackjackAction
-                      )
-                    }
-                  >
-                    <option value={BlackjackAction.Hit}>Hit</option>
-                    <option value={BlackjackAction.Stand}>Stand</option>
-                    <option value={BlackjackAction.Double}>Double</option>
-                    <option value={BlackjackAction.Split}>Split</option>
-                  </select>
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+
+  return (
+    <div>
+      <h2>Strategy Chart Configurator</h2>
+      <h3>Hard Totals</h3>
+      {renderStrategyTable(hardStrategy, "Sum")}
+      {renderStrategyTable(softStrategy, "Soft")}
+      {renderStrategyTable(pairStrategy, "Pair")}
     </div>
   );
 }
