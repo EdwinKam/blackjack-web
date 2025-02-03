@@ -78,7 +78,7 @@ export class ActionStrategy {
     }
   }
 
-  private getBlackjackAction(action: string): BlackjackAction {
+  public getBlackjackAction(action: string): BlackjackAction {
     switch (action) {
       case "H":
         return BlackjackAction.Hit;

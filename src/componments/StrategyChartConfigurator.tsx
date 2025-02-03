@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BlackjackAction } from "../model/BlackjackAction";
 import {
   defaultBlackjackStrategy,
@@ -16,9 +16,78 @@ function StrategyChartConfigurator() {
   const [pairStrategy, setPairStrategy] =
     useState<string[][]>(defaultPairStrategy);
 
-  const renderStrategyTable = (strategy: string[][], labelPrefix: string) => (
-    <table>
-      {labelPrefix === "Sum" && (
+  useEffect(() => {
+    console.log("hardStrategy", hardStrategy);
+    console.log("softStrategy", softStrategy);
+    console.log("pairStrategy", pairStrategy);
+  }, [hardStrategy, softStrategy, pairStrategy]);
+
+  const handleActionChange = (
+    strategyType: "hard" | "soft" | "pair",
+    row: number,
+    col: number,
+    action: string
+  ) => {
+    const updateStrategy = (
+      strategy: string[][],
+      setStrategy: React.Dispatch<React.SetStateAction<string[][]>>
+    ) => {
+      const newStrategy = strategy.map((r, i) =>
+        r.map((a, j) => (i === row && j === col ? action : a))
+      );
+      setStrategy(newStrategy);
+    };
+
+    if (strategyType === "hard") {
+      updateStrategy(hardStrategy, setHardStrategy);
+    } else if (strategyType === "soft") {
+      updateStrategy(softStrategy, setSoftStrategy);
+    } else if (strategyType === "pair") {
+      updateStrategy(pairStrategy, setPairStrategy);
+    }
+  };
+
+  const renderStrategyRows = (
+    strategy: string[][],
+    labelPrefix: string,
+    strategyType: "hard" | "soft" | "pair"
+  ) =>
+    strategy.map((row, rowIndex) => (
+      <tr key={`${labelPrefix}-${rowIndex}`}>
+        <td>
+          {labelPrefix === "Sum"
+            ? `${rowIndex + 8}`
+            : labelPrefix === "Soft"
+            ? `A${rowIndex + 2}`
+            : `${rowIndex + 1},${rowIndex + 1}`}
+        </td>
+        {row.map((action, colIndex) => (
+          <td key={colIndex}>
+            <select
+              value={action}
+              onChange={(e) =>
+                handleActionChange(
+                  strategyType,
+                  rowIndex,
+                  colIndex,
+                  e.target.value
+                )
+              }
+            >
+              <option value="H">H</option>
+              <option value="S">S</option>
+              <option value="D">D</option>
+              <option value="P">P</option>
+            </select>
+          </td>
+        ))}
+      </tr>
+    ));
+
+  return (
+    <div>
+      <h2>Strategy Chart Configurator</h2>
+      <table>
         <thead>
           <tr>
             <th>Player\Dealer</th>
@@ -27,41 +96,12 @@ function StrategyChartConfigurator() {
             ))}
           </tr>
         </thead>
-      )}
-
-      <tbody>
-        {strategy.map((row, rowIndex) => (
-          <tr key={rowIndex}>
-            <td>
-              {labelPrefix === "Sum"
-                ? `${rowIndex + 8}`
-                : labelPrefix === "Soft"
-                ? `A${rowIndex + 2}`
-                : `${rowIndex + 1},${rowIndex + 1}`}{" "}
-            </td>
-            {row.map((action, colIndex) => (
-              <td key={colIndex}>
-                <select value={action} disabled>
-                  <option value={BlackjackAction.Hit}>H</option>
-                  <option value={BlackjackAction.Stand}>S</option>
-                  <option value={BlackjackAction.Double}>D</option>
-                  <option value={BlackjackAction.Split}>P</option>
-                </select>
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-
-  return (
-    <div>
-      <h2>Strategy Chart Configurator</h2>
-      <h3>Hard Totals</h3>
-      {renderStrategyTable(hardStrategy, "Sum")}
-      {renderStrategyTable(softStrategy, "Soft")}
-      {renderStrategyTable(pairStrategy, "Pair")}
+        <tbody>
+          {renderStrategyRows(hardStrategy, "Sum", "hard")}
+          {renderStrategyRows(softStrategy, "Soft", "soft")}
+          {renderStrategyRows(pairStrategy, "Pair", "pair")}
+        </tbody>
+      </table>
     </div>
   );
 }
