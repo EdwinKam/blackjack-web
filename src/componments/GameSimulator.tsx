@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Simulator } from "../service/simulator";
 import StrategyChartConfigurator from "./StrategyChartConfigurator";
 import {
@@ -23,6 +23,8 @@ function GameSimulator() {
   );
   const [pairStrategy, setPairStrategy] =
     useState<string[][]>(defaultPairStrategy);
+  const [isConfiguratorVisible, setIsConfiguratorVisible] = useState(false);
+  const configuratorRef = useRef<HTMLDivElement>(null);
 
   const runSimulation = async () => {
     setIsGameRunning(true);
@@ -93,17 +95,45 @@ function GameSimulator() {
     marginBottom: "10px",
   };
 
+  const toggleConfigurator = () => {
+    setIsConfiguratorVisible(!isConfiguratorVisible);
+  };
+
+  useEffect(() => {
+    if (configuratorRef.current) {
+      const element = configuratorRef.current;
+      if (isConfiguratorVisible) {
+        element.style.height = `${element.scrollHeight}px`;
+        element.style.opacity = "1";
+      } else {
+        element.style.height = "0";
+        element.style.opacity = "0";
+      }
+    }
+  }, [isConfiguratorVisible]);
+
   return (
     <div>
       <h1>Blackjack Simulator</h1>
-      <StrategyChartConfigurator
-        hardStrategy={hardStrategy}
-        setHardStrategy={setHardStrategy}
-        softStrategy={softStrategy}
-        setSoftStrategy={setSoftStrategy}
-        pairStrategy={pairStrategy}
-        setPairStrategy={setPairStrategy}
-      />
+      <button onClick={toggleConfigurator} style={buttonStyle}>
+        {isConfiguratorVisible ? "Hide Configurator" : "Show Configurator"}
+      </button>
+      <div
+        ref={configuratorRef}
+        style={{
+          overflow: "hidden",
+          transition: "height 0.5s ease, opacity 0.5s ease",
+        }}
+      >
+        <StrategyChartConfigurator
+          hardStrategy={hardStrategy}
+          setHardStrategy={setHardStrategy}
+          softStrategy={softStrategy}
+          setSoftStrategy={setSoftStrategy}
+          pairStrategy={pairStrategy}
+          setPairStrategy={setPairStrategy}
+        />
+      </div>
       <div style={containerStyle}>
         <label htmlFor="numOfGames">Number of Games:</label>
         <button onClick={decrementGames} style={buttonStyle}>

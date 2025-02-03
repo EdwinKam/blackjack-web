@@ -94,6 +94,8 @@ function StrategyChartConfigurator({
                 border: "none",
                 cursor: "pointer",
                 transition: "transform 0.1s ease-in-out",
+                width: "100%", // Make button fill the cell
+                minWidth: "40px", // Ensure a minimum width for tap targets
               }}
               onMouseDown={(e) =>
                 (e.currentTarget.style.transform = "scale(1.1)")
@@ -108,12 +110,12 @@ function StrategyChartConfigurator({
     ));
 
   return (
-    <div>
+    <div style={{ overflowX: "auto" }}>
       <h2>Strategy Chart Configurator</h2>
-      <table>
+      <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
           <tr>
-            <th>Player\Dealer</th>
+            <th>P\D</th>
             {[...Array(10)].map((_, i) => (
               <th key={i}>{i + 1}</th>
             ))}
