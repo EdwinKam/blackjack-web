@@ -123,4 +123,22 @@ describe("getPlayAction - Edge Cases", () => {
     const action = actionStrategy.getPlayAction(playerHand, dealerHand, 0);
     expect(action).toBe(BlackjackAction.Stand); // Assuming strategy for bust is Stand
   });
+
+  it("dealer has ace for hard", () => {
+    playerHand.hitCard(new Card(4), 0);
+    playerHand.hitCard(new Card(5), 0);
+    dealerHand.addCard(new Card(1)); // Dealer's face-up card
+
+    const action = actionStrategy.getPlayAction(playerHand, dealerHand, 0);
+    expect(action).toBe(BlackjackAction.Hit); // Assuming strategy for bust is Stand
+  });
+
+  it("dealer has ace for soft", () => {
+    playerHand.hitCard(new Card(1), 0);
+    playerHand.hitCard(new Card(7), 0);
+    dealerHand.addCard(new Card(1)); // Dealer's face-up card
+
+    const action = actionStrategy.getPlayAction(playerHand, dealerHand, 0);
+    expect(action).toBe(BlackjackAction.Hit); // Assuming strategy for bust is Stand
+  });
 });

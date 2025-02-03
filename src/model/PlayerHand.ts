@@ -63,7 +63,7 @@ export class PlayerHand {
       for (let i = 0; i < this.hands[handNumber].length; i++) {
         sum += this.hands[handNumber][i].getValue();
       }
-      return sum;
+      return sum - 1;
     } else {
       return 0;
     }

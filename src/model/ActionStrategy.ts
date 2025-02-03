@@ -118,6 +118,7 @@ export class ActionStrategy {
       playerHand.getValueWithoutAce(handNumber) <= 9
     ) {
       const valueWithoutAce = playerHand.getValueWithoutAce(handNumber);
+      console.log(valueWithoutAce + "is ace without ace");
       const action = this.softHandStrategy[valueWithoutAce - 2][dealerIndex];
       return this.getBlackjackAction(action);
     }

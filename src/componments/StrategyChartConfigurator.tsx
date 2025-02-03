@@ -116,9 +116,10 @@ function StrategyChartConfigurator({
         <thead>
           <tr>
             <th>P\D</th>
-            {[...Array(10)].map((_, i) => (
-              <th key={i}>{i + 1}</th>
+            {[...Array(9)].map((_, i) => (
+              <th key={i}>{i + 2}</th> // Dealer cards 2 through 10
             ))}
+            <th>A</th>
           </tr>
         </thead>
         <tbody>
