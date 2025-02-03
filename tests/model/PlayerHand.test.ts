@@ -1,7 +1,7 @@
 import { Card } from "../../src/model/Card";
 import { PlayerHand } from "../../src/model/PlayerHand";
 
-describe("getPlayAction", () => {
+describe("Player Hand test", () => {
   let playerHand: PlayerHand;
 
   beforeEach(() => {

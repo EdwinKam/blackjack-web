@@ -23,9 +23,23 @@ export class DealerHand {
   }
 
   public isSoft17(): boolean {
-    return (
-      this.getSum() === 17 && this.hand.some((card) => card.getValue() === 1)
-    );
+    return this.hasAce() && this.getValueWithoutAce() === 6;
+  }
+
+  public hasAce(): boolean {
+    return this.hand.some((card) => card.getValue() === 1);
+  }
+
+  public getValueWithoutAce(): number {
+    if (this.hasAce()) {
+      let sum = 0;
+      for (let i = 0; i < this.hand.length; i++) {
+        sum += this.hand[i].getValue();
+      }
+      return sum - 1;
+    } else {
+      return 0;
+    }
   }
 
   public getSum(): number {
