@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { BlackjackAction } from "../model/BlackjackAction";
 import {
   defaultBlackjackStrategy,
   defaultPairStrategy,
@@ -47,6 +46,21 @@ function StrategyChartConfigurator() {
     }
   };
 
+  const getOptionStyle = (action: string) => {
+    switch (action) {
+      case "H":
+        return { backgroundColor: "lightgreen" };
+      case "S":
+        return { backgroundColor: "lightcoral" };
+      case "D":
+        return { backgroundColor: "yellow" };
+      case "P":
+        return { backgroundColor: "plum" };
+      default:
+        return {};
+    }
+  };
+
   const renderStrategyRows = (
     strategy: string[][],
     labelPrefix: string,
@@ -73,6 +87,7 @@ function StrategyChartConfigurator() {
                   e.target.value
                 )
               }
+              style={getOptionStyle(action)}
             >
               <option value="H">H</option>
               <option value="S">S</option>

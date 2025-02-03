@@ -80,8 +80,8 @@ function GameSimulator() {
   return (
     <div>
       <h1>Blackjack Simulator</h1>
+      <StrategyChartConfigurator />
       <div style={containerStyle}>
-        <StrategyChartConfigurator />
         <label htmlFor="numOfGames">Number of Games:</label>
         <button onClick={decrementGames} style={buttonStyle}>
           -
