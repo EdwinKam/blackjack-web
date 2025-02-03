@@ -3,42 +3,42 @@ import { DealerHand } from "./DealerHand";
 import { PlayerHand } from "./PlayerHand";
 
 export const defaultBlackjackStrategy: string[][] = [
-  // A   2,   3,   4,   5,   6,   7,   8,   9,  10
-  ["H", "H", "H", "D", "D", "H", "H", "H", "H", "H"], // Player sum 8
-  ["H", "D", "D", "D", "D", "D", "H", "H", "H", "H"], // Player sum 9
-  ["H", "D", "D", "D", "D", "D", "D", "D", "H", "H"], // Player sum 10
-  ["H", "D", "D", "D", "D", "D", "D", "D", "D", "H"], // Player sum 11
-  ["H", "H", "H", "S", "S", "S", "H", "H", "H", "H"], // Player sum 12
-  ["H", "S", "S", "S", "S", "S", "H", "H", "H", "H"], // Player sum 13
-  ["H", "S", "S", "S", "S", "S", "H", "H", "H", "H"], // Player sum 14
-  ["H", "S", "S", "S", "S", "S", "H", "H", "H", "H"], // Player sum 15
-  ["H", "S", "S", "S", "S", "S", "H", "H", "H", "H"], // Player sum 16
+  // 2,   3,   4,   5,   6,   7,   8,   9,  10,  A
+  ["H", "H", "D", "D", "H", "H", "H", "H", "H", "H"], // Player sum 8
+  ["D", "D", "D", "D", "D", "H", "H", "H", "H", "H"], // Player sum 9
+  ["D", "D", "D", "D", "D", "D", "D", "H", "H", "H"], // Player sum 10
+  ["D", "D", "D", "D", "D", "D", "D", "D", "H", "H"], // Player sum 11
+  ["H", "H", "S", "S", "S", "H", "H", "H", "H", "H"], // Player sum 12
+  ["S", "S", "S", "S", "S", "H", "H", "H", "H", "H"], // Player sum 13
+  ["S", "S", "S", "S", "S", "H", "H", "H", "H", "H"], // Player sum 14
+  ["S", "S", "S", "S", "S", "H", "H", "H", "H", "H"], // Player sum 15
+  ["S", "S", "S", "S", "S", "H", "H", "H", "H", "H"], // Player sum 16
   ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], // Player sum 17
 ];
 
 export const defaultSoftHandStrategy: string[][] = [
-  // A,  2  , 3,  4,     5,   6,  7,   8,   9,  10
-  ["H", "H", "H", "H", "D", "D", "H", "H", "H", "H"], // Player soft 13 (A, 2)
-  ["H", "H", "H", "H", "D", "D", "H", "H", "H", "H"], // Player soft 14 (A, 3)
-  ["H", "H", "H", "D", "D", "D", "H", "H", "H", "H"], // Player soft 15 (A, 4)
-  ["H", "H", "H", "D", "D", "D", "H", "H", "H", "H"], // Player soft 16 (A, 5)
-  ["H", "H", "D", "D", "D", "D", "H", "H", "H", "H"], // Player soft 17 (A, 6)
-  ["H", "S", "D", "D", "D", "D", "S", "S", "H", "H"], // Player soft 18 (A, 7)
+  // 2,  3,  4,  5,   6,  7,   8,   9,  10,  A
+  ["H", "H", "H", "D", "D", "H", "H", "H", "H", "H"], // Player soft 13 (A, 2)
+  ["H", "H", "H", "D", "D", "H", "H", "H", "H", "H"], // Player soft 14 (A, 3)
+  ["H", "H", "D", "D", "D", "H", "H", "H", "H", "H"], // Player soft 15 (A, 4)
+  ["H", "H", "D", "D", "D", "H", "H", "H", "H", "H"], // Player soft 16 (A, 5)
+  ["H", "D", "D", "D", "D", "H", "H", "H", "H", "H"], // Player soft 17 (A, 6)
+  ["S", "D", "D", "D", "D", "S", "S", "H", "H", "H"], // Player soft 18 (A, 7)
   ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], // Player soft 19 (A, 8)
   ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], // Player soft 20 (A, 9)
 ];
 
 export const defaultPairStrategy: string[][] = [
-  // Dealer's face-up card: 11 (Ace), 2, 3, 4, 5, 6, 7, 8, 9, 10
+  // 2, 3, 4, 5, 6, 7, 8, 9, 10,  A
   ["P", "P", "P", "P", "P", "P", "P", "P", "P", "P"], // Pair of Aces
-  ["H", "P", "P", "P", "P", "P", "P", "H", "H", "H"], // Pair of 2s
-  ["H", "P", "P", "P", "P", "P", "P", "H", "H", "H"], // Pair of 3s
-  ["H", "H", "H", "H", "P", "P", "H", "H", "H", "H"], // Pair of 4s
-  ["H", "D", "D", "D", "D", "D", "D", "D", "H", "H"], // Pair of 5s
-  ["H", "P", "P", "P", "P", "P", "H", "H", "H", "H"], // Pair of 6s
-  ["H", "P", "P", "P", "P", "P", "P", "H", "H", "S"], // Pair of 7s
+  ["P", "P", "P", "P", "P", "P", "H", "H", "H", "H"], // Pair of 2s
+  ["P", "P", "P", "P", "P", "P", "H", "H", "H", "H"], // Pair of 3s
+  ["H", "H", "H", "P", "P", "H", "H", "H", "H", "H"], // Pair of 4s
+  ["D", "D", "D", "D", "D", "D", "H", "H", "H", "H"], // Pair of 5s
+  ["P", "P", "P", "P", "P", "H", "H", "H", "H", "H"], // Pair of 6s
+  ["P", "P", "P", "P", "P", "P", "H", "H", "S", "H"], // Pair of 7s
   ["P", "P", "P", "P", "P", "P", "P", "P", "P", "P"], // Pair of 8s
-  ["S", "P", "P", "P", "P", "P", "S", "P", "P", "S"], // Pair of 9s
+  ["P", "P", "P", "P", "P", "S", "P", "P", "S", "S"], // Pair of 9s
   ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], // Pair of 10s
 ];
 
@@ -100,6 +100,8 @@ export class ActionStrategy {
   ): BlackjackAction {
     const playerSum = playerHand.getSum(handNumber);
     const dealerFaceUpCard = dealerHand.getFaceUpCard().getValue();
+    const dealerIndex = dealerFaceUpCard === 1 ? 9 : dealerFaceUpCard - 2; // Adjust for Ace being last
+
     if (playerHand.getSum(handNumber) >= 21) {
       return BlackjackAction.Stand;
     }
@@ -107,8 +109,7 @@ export class ActionStrategy {
     if (playerHand.hasPair(handNumber)) {
       const pairValue = playerHand.getPairCard(handNumber).getValue();
       const pairIndex = pairValue - 1;
-      // console.log(`checking pairStrategy[${pairIndex}][${dealerFaceUpCard - 1}]`);
-      const action = this.pairStrategy[pairIndex][dealerFaceUpCard - 1];
+      const action = this.pairStrategy[pairIndex][dealerIndex];
       return this.getBlackjackAction(action);
     }
 
@@ -117,13 +118,7 @@ export class ActionStrategy {
       playerHand.getValueWithoutAce(handNumber) <= 9
     ) {
       const valueWithoutAce = playerHand.getValueWithoutAce(handNumber);
-      // console.log(
-      //   `checking softHandStrategry[${valueWithoutAce - 2}][${
-      //     dealerFaceUpCard - 1
-      //   }]`
-      // );
-      const action =
-        this.softHandStrategy[valueWithoutAce - 2][dealerFaceUpCard - 1];
+      const action = this.softHandStrategy[valueWithoutAce - 2][dealerIndex];
       return this.getBlackjackAction(action);
     }
 
@@ -132,10 +127,8 @@ export class ActionStrategy {
     } else if (playerSum > 17) {
       return BlackjackAction.Stand;
     }
-    //   console.log(
-    //     `checking blackjackStrategy[${playerSum - 8}][${dealerFaceUpCard - 1}]`
-    //   );
-    const action = this.blackjackStrategy[playerSum - 8][dealerFaceUpCard - 1];
+
+    const action = this.blackjackStrategy[playerSum - 8][dealerIndex];
     return this.getBlackjackAction(action);
   }
 }
