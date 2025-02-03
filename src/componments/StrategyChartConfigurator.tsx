@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
-import {
-  defaultBlackjackStrategy,
-  defaultPairStrategy,
-  defaultSoftHandStrategy,
-} from "../model/ActionStrategy";
+import React, { useEffect } from "react";
 
-function StrategyChartConfigurator() {
-  const [hardStrategy, setHardStrategy] = useState<string[][]>(
-    defaultBlackjackStrategy
-  );
-  const [softStrategy, setSoftStrategy] = useState<string[][]>(
-    defaultSoftHandStrategy
-  );
-  const [pairStrategy, setPairStrategy] =
-    useState<string[][]>(defaultPairStrategy);
-
+function StrategyChartConfigurator({
+  hardStrategy,
+  softStrategy,
+  pairStrategy,
+  setHardStrategy,
+  setSoftStrategy,
+  setPairStrategy,
+}: {
+  hardStrategy: string[][];
+  softStrategy: string[][];
+  pairStrategy: string[][];
+  setHardStrategy: React.Dispatch<React.SetStateAction<string[][]>>;
+  setSoftStrategy: React.Dispatch<React.SetStateAction<string[][]>>;
+  setPairStrategy: React.Dispatch<React.SetStateAction<string[][]>>;
+}) {
   useEffect(() => {
     console.log("hardStrategy", hardStrategy);
     console.log("softStrategy", softStrategy);

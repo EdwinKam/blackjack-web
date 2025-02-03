@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { Simulator } from "../service/simulator";
 import StrategyChartConfigurator from "./StrategyChartConfigurator";
+import {
+  defaultBlackjackStrategy,
+  defaultPairStrategy,
+  defaultSoftHandStrategy,
+} from "../model/ActionStrategy";
 
 function GameSimulator() {
   const [numOfGames, setNumOfGames] = useState(10000);
@@ -10,16 +15,27 @@ function GameSimulator() {
   const [isGameRunning, setIsGameRunning] = useState(false);
   const [simulator, setSimulator] = useState<Simulator | null>(null);
   const [gameResult, setGameResult] = useState<number | null>(null);
+  const [hardStrategy, setHardStrategy] = useState<string[][]>(
+    defaultBlackjackStrategy
+  );
+  const [softStrategy, setSoftStrategy] = useState<string[][]>(
+    defaultSoftHandStrategy
+  );
+  const [pairStrategy, setPairStrategy] =
+    useState<string[][]>(defaultPairStrategy);
 
   const runSimulation = async () => {
     setIsGameRunning(true);
     console.log("Starting a game");
-    const newSimulator = new Simulator();
-    setSimulator(newSimulator);
-    const result = await newSimulator.startSimulation(
+    const simulator = new Simulator();
+    setSimulator(simulator);
+    const result = await simulator.startSimulation(
       numOfGames,
       cutOffRatio,
-      numOfDecks
+      numOfDecks,
+      hardStrategy,
+      softStrategy,
+      pairStrategy
     );
     console.log(result + "haha");
     setGameResult(result);
@@ -80,7 +96,14 @@ function GameSimulator() {
   return (
     <div>
       <h1>Blackjack Simulator</h1>
-      <StrategyChartConfigurator />
+      <StrategyChartConfigurator
+        hardStrategy={hardStrategy}
+        setHardStrategy={setHardStrategy}
+        softStrategy={softStrategy}
+        setSoftStrategy={setSoftStrategy}
+        pairStrategy={pairStrategy}
+        setPairStrategy={setPairStrategy}
+      />
       <div style={containerStyle}>
         <label htmlFor="numOfGames">Number of Games:</label>
         <button onClick={decrementGames} style={buttonStyle}>

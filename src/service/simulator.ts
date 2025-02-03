@@ -10,11 +10,18 @@ export class Simulator {
   public startSimulation(
     totalGame: number,
     cutOff: number,
-    numberOfDecks: number
+    numberOfDecks: number,
+    hardStrategy: string[][],
+    softStrategy: string[][],
+    pairStrategy: string[][]
   ): Promise<number> {
     return new Promise((resolve) => {
       const cards = new CardDistributor(cutOff, numberOfDecks);
-      const strategy = new ActionStrategy();
+      const strategy = new ActionStrategy(
+        hardStrategy,
+        softStrategy,
+        pairStrategy
+      );
       cards.shuffle();
       let totalWin = 0;
       let i = 0;
