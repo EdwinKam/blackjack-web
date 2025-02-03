@@ -21,18 +21,24 @@ function StrategyChartConfigurator({
     console.log("pairStrategy", pairStrategy);
   }, [hardStrategy, softStrategy, pairStrategy]);
 
+  const actionSequence: string[] = ["H", "S", "D", "P"];
+
+  const getNextAction = (currentAction: string): string => {
+    const currentIndex = actionSequence.indexOf(currentAction);
+    return actionSequence[(currentIndex + 1) % actionSequence.length];
+  };
+
   const handleActionChange = (
     strategyType: "hard" | "soft" | "pair",
     row: number,
-    col: number,
-    action: string
+    col: number
   ) => {
     const updateStrategy = (
       strategy: string[][],
       setStrategy: React.Dispatch<React.SetStateAction<string[][]>>
     ) => {
       const newStrategy = strategy.map((r, i) =>
-        r.map((a, j) => (i === row && j === col ? action : a))
+        r.map((a, j) => (i === row && j === col ? getNextAction(a) : a))
       );
       setStrategy(newStrategy);
     };
@@ -46,7 +52,7 @@ function StrategyChartConfigurator({
     }
   };
 
-  const getOptionStyle = (action: string) => {
+  const getButtonStyle = (action: string) => {
     switch (action) {
       case "H":
         return { backgroundColor: "lightgreen" };
@@ -77,23 +83,25 @@ function StrategyChartConfigurator({
         </td>
         {row.map((action, colIndex) => (
           <td key={colIndex}>
-            <select
-              value={action}
-              onChange={(e) =>
-                handleActionChange(
-                  strategyType,
-                  rowIndex,
-                  colIndex,
-                  e.target.value
-                )
+            <button
+              onClick={() =>
+                handleActionChange(strategyType, rowIndex, colIndex)
               }
-              style={getOptionStyle(action)}
+              style={{
+                ...getButtonStyle(action),
+                borderRadius: "5px",
+                padding: "10px",
+                border: "none",
+                cursor: "pointer",
+                transition: "transform 0.1s ease-in-out",
+              }}
+              onMouseDown={(e) =>
+                (e.currentTarget.style.transform = "scale(1.1)")
+              }
+              onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
             >
-              <option value="H">H</option>
-              <option value="S">S</option>
-              <option value="D">D</option>
-              <option value="P">P</option>
-            </select>
+              {action}
+            </button>
           </td>
         ))}
       </tr>
