@@ -7,6 +7,7 @@ import {
   defaultPairStrategy,
   defaultSoftHandStrategy,
 } from "../model/ActionStrategy";
+import { RunningCountStrategy } from "../model/RunningCountStrategy";
 
 function GameSimulator() {
   const [numOfGames, setNumOfGames] = useState(10000);
@@ -41,7 +42,8 @@ function GameSimulator() {
       numOfGames,
       cutOffRatio,
       numOfDecks,
-      actionStrategy
+      actionStrategy,
+      new RunningCountStrategy()
     );
     console.log(result + "haha");
     setGameResult(result);

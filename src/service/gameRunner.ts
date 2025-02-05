@@ -12,11 +12,12 @@ export interface GameResult {
 
 export default function runGame(
   cardDistributor: CardDistributor,
-  actionStrategy: ActionStrategy
+  actionStrategy: ActionStrategy,
+  baseBet: number
 ): GameResult {
   cardDistributor.ifCutCardReachedThenShuffle();
   const dealerHand = new DealerHand();
-  const playerHand = new PlayerHand(1);
+  const playerHand = new PlayerHand(baseBet);
 
   playerHand.hitCard(cardDistributor.dealCard(), 0);
   dealerHand.addCard(cardDistributor.dealCard());

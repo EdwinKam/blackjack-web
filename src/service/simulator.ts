@@ -1,5 +1,6 @@
 import { ActionStrategy } from "../model/ActionStrategy";
 import { CardDistributor } from "../model/CardDistributor";
+import { RunningCountStrategy } from "../model/RunningCountStrategy";
 import runGame from "./gameRunner";
 
 export class Simulator {
@@ -11,7 +12,8 @@ export class Simulator {
     totalGame: number,
     cutOff: number,
     numberOfDecks: number,
-    actionStrategy: ActionStrategy
+    actionStrategy: ActionStrategy,
+    runningCountStrategy: RunningCountStrategy
   ): Promise<number> {
     return new Promise((resolve) => {
       const cards = new CardDistributor(cutOff, numberOfDecks);
@@ -24,7 +26,10 @@ export class Simulator {
         const end = Math.min(i + batchSize, totalGame);
 
         for (; i < end; i++) {
-          const game = runGame(cards, actionStrategy);
+          const basebet = runningCountStrategy.getBaseBet(
+            cards.getRunningCount()
+          );
+          const game = runGame(cards, actionStrategy, basebet);
           totalWin += game.playerWin;
 
           if (i % Math.floor(totalGame / 100) === 0) {
