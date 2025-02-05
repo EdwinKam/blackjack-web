@@ -1,24 +1,24 @@
 export class RunningCountStrategy {
   public strategy: Map<number, number> = new Map<number, number>();
 
-  public static defaultRunningCountStrategy: Map<number, number> = new Map<
-    number,
-    number
-  >(Array.from({ length: 41 }, (_, i) => [i - 20, 1]));
-
-  public constructor(
-    strategy: Map<
-      number,
-      number
-    > = RunningCountStrategy.defaultRunningCountStrategy
-  ) {
-    this.strategy = strategy;
+  constructor(strategy?: Map<number, number>) {
+    if (strategy) {
+      this.strategy = strategy;
+    } else {
+      this.strategy = new Map<number, number>();
+      for (let i = -20; i <= 20; i++) {
+        this.strategy.set(i, 1);
+      }
+    }
   }
 
   public getBaseBet(runningCount: number): number {
-    if (this.strategy.get(runningCount) === undefined) {
-      throw new Error(`Invalid running count: ${runningCount}`);
+    if (runningCount < -20) {
+      return this.strategy.get(-20) as number;
+    } else if (runningCount > 20) {
+      return this.strategy.get(20) as number;
+    } else {
+      return this.strategy.get(runningCount) as number;
     }
-    return this.strategy.get(runningCount) as number;
   }
 }
