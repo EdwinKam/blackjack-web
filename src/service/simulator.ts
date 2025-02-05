@@ -11,17 +11,10 @@ export class Simulator {
     totalGame: number,
     cutOff: number,
     numberOfDecks: number,
-    hardStrategy: string[][],
-    softStrategy: string[][],
-    pairStrategy: string[][]
+    actionStrategy: ActionStrategy
   ): Promise<number> {
     return new Promise((resolve) => {
       const cards = new CardDistributor(cutOff, numberOfDecks);
-      const strategy = new ActionStrategy(
-        hardStrategy,
-        softStrategy,
-        pairStrategy
-      );
       cards.shuffle();
       let totalWin = 0;
       let i = 0;
@@ -31,7 +24,7 @@ export class Simulator {
         const end = Math.min(i + batchSize, totalGame);
 
         for (; i < end; i++) {
-          const game = runGame(cards, strategy);
+          const game = runGame(cards, actionStrategy);
           totalWin += game.playerWin;
 
           if (i % Math.floor(totalGame / 100) === 0) {

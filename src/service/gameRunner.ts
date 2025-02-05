@@ -16,7 +16,7 @@ export default function runGame(
 ): GameResult {
   cardDistributor.ifCutCardReachedThenShuffle();
   const dealerHand = new DealerHand();
-  const playerHand = new PlayerHand();
+  const playerHand = new PlayerHand(1);
 
   playerHand.hitCard(cardDistributor.dealCard(), 0);
   dealerHand.addCard(cardDistributor.dealCard());

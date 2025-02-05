@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { Simulator } from "../service/simulator";
 import StrategyChartConfigurator from "./StrategyChartConfigurator";
 import {
+  ActionStrategy,
   defaultBlackjackStrategy,
   defaultPairStrategy,
   defaultSoftHandStrategy,
@@ -31,13 +32,16 @@ function GameSimulator() {
     console.log("Starting a game");
     const simulator = new Simulator();
     setSimulator(simulator);
+    const actionStrategy = new ActionStrategy(
+      hardStrategy,
+      softStrategy,
+      pairStrategy
+    );
     const result = await simulator.startSimulation(
       numOfGames,
       cutOffRatio,
       numOfDecks,
-      hardStrategy,
-      softStrategy,
-      pairStrategy
+      actionStrategy
     );
     console.log(result + "haha");
     setGameResult(result);
