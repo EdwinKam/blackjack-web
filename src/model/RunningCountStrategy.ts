@@ -21,4 +21,8 @@ export class RunningCountStrategy {
       return this.strategy.get(runningCount) as number;
     }
   }
+
+  public updateStrategy(value: number, runningCount: number) {
+    this.strategy.set(value, runningCount);
+  }
 }

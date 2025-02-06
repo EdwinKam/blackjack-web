@@ -18,6 +18,7 @@ export default function runGame(
   cardDistributor.ifCutCardReachedThenShuffle();
   const dealerHand = new DealerHand();
   const playerHand = new PlayerHand(baseBet);
+  // console.log("running count" + cardDistributor.getRunningCount());
 
   playerHand.hitCard(cardDistributor.dealCard(), 0);
   dealerHand.addCard(cardDistributor.dealCard());
@@ -90,6 +91,9 @@ export default function runGame(
       totalWin -= playerHand.getBaseBetRatio(handNumber);
     }
   }
+  // console.log("playerHand", playerHand.toString());
+  // console.log("dealerHand", dealerHand.toString());
+  // console.log("total win", totalWin);
 
   return { playerHand, dealerHand, playerWin: totalWin };
 }

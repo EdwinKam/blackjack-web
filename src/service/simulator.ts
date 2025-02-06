@@ -31,6 +31,7 @@ export class Simulator {
           );
           const game = runGame(cards, actionStrategy, basebet);
           totalWin += game.playerWin;
+          // console.log("after Game " + i + " win: " + totalWin);
 
           if (i % Math.floor(totalGame / 100) === 0) {
             this.progressPercent = Math.floor((i / totalGame) * 100);
@@ -41,7 +42,6 @@ export class Simulator {
           setTimeout(runBatch, 0); // Schedule the next batch
         } else {
           const winPercentage = (totalWin / totalGame) * 100;
-          console.log(`Total win: ${winPercentage}%`);
           resolve(winPercentage); // Resolve the promise with the win percentage
         }
       };

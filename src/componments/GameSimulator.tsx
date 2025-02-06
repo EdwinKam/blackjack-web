@@ -8,15 +8,18 @@ import {
   defaultSoftHandStrategy,
 } from "../model/ActionStrategy";
 import { RunningCountStrategy } from "../model/RunningCountStrategy";
+import RunningCountConfigurator from "./RunningCountConfigurator";
 
 function GameSimulator() {
-  const [numOfGames, setNumOfGames] = useState(10000);
+  const [numOfGames, setNumOfGames] = useState(10);
   const [numOfDecks, setNumOfDecks] = useState(4);
   const [cutOffRatio, setCutOffRatio] = useState(0.75);
   const [progress, setProgress] = useState(0);
   const [isGameRunning, setIsGameRunning] = useState(false);
   const [simulator, setSimulator] = useState<Simulator | null>(null);
   const [gameResult, setGameResult] = useState<number | null>(null);
+  const [runningCountStrategy, setRunningCountStrategy] =
+    useState<RunningCountStrategy>(new RunningCountStrategy());
   const [hardStrategy, setHardStrategy] = useState<string[][]>(
     defaultBlackjackStrategy
   );
@@ -43,9 +46,8 @@ function GameSimulator() {
       cutOffRatio,
       numOfDecks,
       actionStrategy,
-      new RunningCountStrategy()
+      runningCountStrategy
     );
-    console.log(result + "haha");
     setGameResult(result);
     setIsGameRunning(false);
   };
@@ -140,6 +142,10 @@ function GameSimulator() {
           setPairStrategy={setPairStrategy}
         />
       </div>
+      <RunningCountConfigurator
+        runningCountStrategy={runningCountStrategy}
+        setRunningCountStrategy={setRunningCountStrategy}
+      />
       <div style={containerStyle}>
         <label htmlFor="numOfGames">Number of Games:</label>
         <button onClick={decrementGames} style={buttonStyle}>
