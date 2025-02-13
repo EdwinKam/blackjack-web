@@ -8,7 +8,7 @@ import {
   defaultSoftHandStrategy,
 } from "../model/ActionStrategy";
 import { RunningCountStrategy } from "../model/RunningCountStrategy";
-import RunningCountConfigurator from "./RunningCountConfigurator";
+// import RunningCountConfigurator from "./RunningCountConfigurator";
 
 function GameSimulator() {
   const [numOfGames, setNumOfGames] = useState(10);
@@ -17,7 +17,8 @@ function GameSimulator() {
   const [progress, setProgress] = useState(0);
   const [isGameRunning, setIsGameRunning] = useState(false);
   const [simulator, setSimulator] = useState<Simulator | null>(null);
-  const [gameResult, setGameResult] = useState<number | null>(null);
+  const [simulationResult, setSimulationResult] =
+    useState<SimulationResult | null>(null);
   const [runningCountStrategy, setRunningCountStrategy] =
     useState<RunningCountStrategy>(new RunningCountStrategy());
   const [hardStrategy, setHardStrategy] = useState<string[][]>(
@@ -48,7 +49,7 @@ function GameSimulator() {
       actionStrategy,
       runningCountStrategy
     );
-    setGameResult(result);
+    setSimulationResult(result);
     setIsGameRunning(false);
   };
 
@@ -142,10 +143,10 @@ function GameSimulator() {
           setPairStrategy={setPairStrategy}
         />
       </div>
-      <RunningCountConfigurator
+      {/* <RunningCountConfigurator
         runningCountStrategy={runningCountStrategy}
         setRunningCountStrategy={setRunningCountStrategy}
-      />
+      /> */}
       <div style={containerStyle}>
         <label htmlFor="numOfGames">Number of Games:</label>
         <button onClick={decrementGames} style={buttonStyle}>
@@ -180,7 +181,13 @@ function GameSimulator() {
         Start Simulation
       </button>
       {isGameRunning && <div>Progress: {progress.toFixed(2)}%</div>}
-      {gameResult !== null && <div>Win rate: {gameResult.toFixed(2)}%</div>}
+      {simulationResult !== null && (
+        <div>
+          <div>Win rate: {simulationResult.winPercentage.toFixed(2)}%</div>
+          <div>Total Win: {simulationResult.totalWin}</div>
+          <div>Max Loss: {simulationResult.maxLoss}</div>
+        </div>
+      )}
     </div>
   );
 }
