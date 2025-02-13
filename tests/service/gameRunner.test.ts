@@ -27,7 +27,7 @@ describe("runGame", () => {
 
     actionStrategy.getPlayAction.mockReturnValue(BlackjackAction.Stand);
 
-    const result: GameResult = runGame(cardDistributor, actionStrategy);
+    const result: GameResult = runGame(cardDistributor, actionStrategy, 1);
 
     expect(result.playerWin).toBe(1.5);
   });
@@ -41,7 +41,7 @@ describe("runGame", () => {
 
     actionStrategy.getPlayAction.mockReturnValue(BlackjackAction.Stand);
 
-    const result: GameResult = runGame(cardDistributor, actionStrategy);
+    const result: GameResult = runGame(cardDistributor, actionStrategy, 1);
 
     expect(result.playerWin).toBe(1.5);
   });
@@ -55,7 +55,7 @@ describe("runGame", () => {
 
     actionStrategy.getPlayAction.mockReturnValue(BlackjackAction.Stand);
 
-    const result: GameResult = runGame(cardDistributor, actionStrategy);
+    const result: GameResult = runGame(cardDistributor, actionStrategy, 1);
 
     expect(result.playerWin).toBe(-1);
   });
@@ -74,7 +74,7 @@ describe("runGame", () => {
       .mockReturnValueOnce(BlackjackAction.Hit) // Player hits
       .mockReturnValueOnce(BlackjackAction.Stand); // Player stands after busting
 
-    const result: GameResult = runGame(cardDistributor, actionStrategy);
+    const result: GameResult = runGame(cardDistributor, actionStrategy, 1);
 
     expect(result.playerWin).toBe(-1); // Player loses due to bust
   });
