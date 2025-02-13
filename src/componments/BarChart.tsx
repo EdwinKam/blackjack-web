@@ -6,10 +6,11 @@ import {
   CategoryScale,
   LinearScale,
   Tooltip,
+  Legend,
 } from "chart.js";
 
 // Register the necessary components
-ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip);
+ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 // Define the props type
 interface SampledBarChartProps {
@@ -47,12 +48,6 @@ class SampledBarChart extends Component<SampledBarChartProps> {
       (key) => filteredDataMap.get(key) as number
     );
 
-    // Calculate the total sum of the data points for percentage calculation
-    const totalDataSum = sampledDataPoints.reduce(
-      (sum, value) => sum + value,
-      0
-    );
-
     const data = {
       labels: sampledLabels, // X-axis labels
       datasets: [
@@ -66,12 +61,12 @@ class SampledBarChart extends Component<SampledBarChartProps> {
       ],
     };
 
-    const options = {
+    const options: any = {
       responsive: true,
       plugins: {
         legend: {
-          display: true,
-          position: "top",
+          display: false,
+          position: "top" as const, // Explicitly type the position
         },
         tooltip: {
           callbacks: {
