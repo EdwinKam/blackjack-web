@@ -45,7 +45,7 @@ export class Simulator {
 
       const runBatch = () => {
         const end = Math.min(i + batchSize, totalGame);
-        sampleTotleWin.set(i, totalWin);
+        sampleTotleWin.set(i, totalWin); // only record every 1000 games
         for (; i < end; i++) {
           cards.ifCutCardReachedThenShuffle();
           if (totalGame < 10000) {
@@ -56,7 +56,11 @@ export class Simulator {
           if (cards.getAdjustedRunningCount() > 0) {
             basebet = 2;
           }
+          if (cards.getAdjustedRunningCount() > 2) {
+            basebet = 3;
+          }
           const preGameRunningCount = cards.getAdjustedRunningCount();
+          logger("start game");
           const game = runGame(cards, actionStrategy, basebet);
           totalWin += game.playerWin;
 

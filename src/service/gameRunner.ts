@@ -36,9 +36,9 @@ export default function runGame(
   if (playerHand.isBlackjack(0) && dealerHand.isBlackjack()) {
     return { playerHand, dealerHand, playerWin: 0 };
   } else if (playerHand.isBlackjack(0)) {
-    return { playerHand, dealerHand, playerWin: 1.5 };
+    return { playerHand, dealerHand, playerWin: 1.5 * baseBet };
   } else if (dealerHand.isBlackjack()) {
-    return { playerHand, dealerHand, playerWin: -1 };
+    return { playerHand, dealerHand, playerWin: -1 * baseBet };
   }
 
   let playHandCount = 1;

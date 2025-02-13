@@ -16,7 +16,7 @@ export class PlayerHand {
   }
 
   public doubleCard(card: Card, handNumber: number): void {
-    this.baseBetRatio[handNumber] = 2;
+    this.baseBetRatio[handNumber] = this.baseBetRatio[handNumber] * 2;
     this.hands[handNumber].push(card);
   }
 
