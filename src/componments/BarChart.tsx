@@ -1,4 +1,3 @@
-// src/components/SampledBarChart.tsx
 import React, { Component } from "react";
 import { Bar } from "react-chartjs-2";
 import {
@@ -14,6 +13,7 @@ ChartJS.register(BarElement, CategoryScale, LinearScale);
 // Define the props type
 interface SampledBarChartProps {
   dataMap: Map<number, number>; // Use a Map for data points
+  weightMap?: Map<number, number>; // Optional weighted map
   label?: string;
   xLabel?: string;
   yLabel?: string;
@@ -21,11 +21,30 @@ interface SampledBarChartProps {
 
 class SampledBarChart extends Component<SampledBarChartProps> {
   render() {
-    const { dataMap, label, xLabel, yLabel } = this.props;
+    const { dataMap, weightMap, label, xLabel, yLabel } = this.props;
 
-    // Convert the Map to arrays for labels and data
-    const sampledLabels = Array.from(dataMap.keys());
-    const sampledDataPoints = Array.from(dataMap.values());
+    // Calculate the total weight sum
+    const totalWeightSum = weightMap
+      ? Array.from(weightMap.values()).reduce((sum, weight) => sum + weight, 0)
+      : 0;
+
+    // Filter the dataMap based on the weightedMap
+    const filteredDataMap = new Map<number, number>();
+    dataMap.forEach((value, key) => {
+      const weight = weightMap?.get(key) || 0;
+      if (weight >= 0.01 * totalWeightSum) {
+        filteredDataMap.set(key, value);
+      }
+    });
+
+    // Sort the keys of the filteredDataMap
+    const sortedKeys = Array.from(filteredDataMap.keys()).sort((a, b) => a - b);
+
+    // Convert the sorted Map to arrays for labels and data
+    const sampledLabels = sortedKeys;
+    const sampledDataPoints = sortedKeys.map(
+      (key) => filteredDataMap.get(key) as number
+    );
 
     const data = {
       labels: sampledLabels, // X-axis labels
@@ -67,7 +86,7 @@ class SampledBarChart extends Component<SampledBarChartProps> {
     return (
       <div>
         {label && <h2>{label}</h2>}
-        <Bar data={data} />
+        <Bar data={data} options={options} />
       </div>
     );
   }

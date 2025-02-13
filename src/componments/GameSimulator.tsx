@@ -202,7 +202,6 @@ function GameSimulator() {
           />
           <BarChart
             label="Running Count Win Rate"
-            isPercentage={true}
             dataMap={
               new Map(
                 Array.from(
