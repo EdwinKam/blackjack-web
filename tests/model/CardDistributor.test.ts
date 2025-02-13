@@ -59,6 +59,33 @@ describe("Card distributor test", () => {
 
     expect(cardDistributor.getRunningCount()).toBe(-4);
   });
+
+  it("test get adjusted running count", () => {
+    const cardDistributor = new CardDistributor(0.75, 2);
+    const card1 = new Card(2);
+
+    const cards = [card1];
+    setCardForTesting(cardDistributor, cards, 2);
+    for (let i = 0; i < cards.length; i++) {
+      cardDistributor.dealCard();
+    }
+
+    expect(cardDistributor.getAdjustedRunningCount()).toBe(0);
+  });
+
+  it("test get adjusted running count", () => {
+    const cardDistributor = new CardDistributor(0.75, 2);
+    const card1 = new Card(2);
+    const card2 = new Card(2);
+
+    const cards = [card1, card2];
+    setCardForTesting(cardDistributor, cards, 2);
+    for (let i = 0; i < cards.length; i++) {
+      cardDistributor.dealCard();
+    }
+
+    expect(cardDistributor.getAdjustedRunningCount()).toBe(1);
+  });
 });
 
 function setCardForTesting(

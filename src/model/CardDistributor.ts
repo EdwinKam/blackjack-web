@@ -57,7 +57,9 @@ export class CardDistributor {
   }
 
   public getAdjustedRunningCount(): number {
-    return this.runningCount / ((this.deck.length - this.currentIndex) / 52);
+    return Math.floor(
+      this.runningCount / ((this.deck.length - this.currentIndex) / 52)
+    );
   }
 
   public setDeckForTesting(deck: Deck): void {
