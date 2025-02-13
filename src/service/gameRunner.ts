@@ -16,14 +16,6 @@ export default function runGame(
   actionStrategy: ActionStrategy,
   baseBet: number
 ): GameResult {
-  logger(
-    "running count: " +
-      cardDistributor.getRunningCount() +
-      " | adjusted running count: " +
-      cardDistributor.getAdjustedRunningCount() +
-      " | card remaining: " +
-      cardDistributor.getRemainingCard()
-  );
   const dealerHand = new DealerHand();
   const playerHand = new PlayerHand(baseBet);
   // console.log("running count" + cardDistributor.getRunningCount());
@@ -105,8 +97,6 @@ export default function runGame(
       totalWin -= playerHand.getBaseBetRatio(handNumber);
     }
   }
-  logger("playerHand" + playerHand.toString());
-  logger("dealerHand" + dealerHand.toString());
 
   return { playerHand, dealerHand, playerWin: totalWin };
 }

@@ -52,7 +52,8 @@ export class Simulator {
             sampleTotleWin.set(i, totalWin);
           }
           let basebet = 1;
-          strategyDescription = "adjusted running count > 0 then double bet";
+          strategyDescription =
+            "adjusted running count > 0 then $1, > 2 then $3";
           if (cards.getAdjustedRunningCount() > 0) {
             basebet = 2;
           }
@@ -61,6 +62,16 @@ export class Simulator {
           }
           const preGameRunningCount = cards.getAdjustedRunningCount();
           logger("start game");
+          logger(
+            "running count: " +
+              cards.getRunningCount() +
+              " | adjusted running count: " +
+              cards.getAdjustedRunningCount() +
+              " | card remaining: " +
+              cards.getRemainingCard() +
+              " | basebet: " +
+              basebet
+          );
           const game = runGame(cards, actionStrategy, basebet);
           totalWin += game.playerWin;
 
@@ -88,7 +99,8 @@ export class Simulator {
           // console.log("wintotal", runningCountWinTotal);
           // console.log("losstotal", runningCountLossTotal);
           // console.log("toal", runningCountGameCount);
-
+          logger("playerHand" + game.playerHand.toString());
+          logger("dealerHand" + game.dealerHand.toString());
           logger("basebet: " + basebet + " | total win: " + totalWin);
           maxLoss = Math.min(maxLoss, totalWin);
           maxWin = Math.max(maxWin, totalWin);
