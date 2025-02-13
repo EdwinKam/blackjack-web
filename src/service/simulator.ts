@@ -1,6 +1,13 @@
 import { ActionStrategy } from "../model/ActionStrategy";
 import { CardDistributor } from "../model/CardDistributor";
+import { RunningCountStrategy } from "../model/RunningCountStrategy";
 import runGame from "./gameRunner";
+
+export interface SimulationResult {
+  winPercentage: number;
+  totalWin: number;
+  maxLoss: number;
+}
 
 export class Simulator {
   public progressPercent: number = 0;
@@ -11,19 +18,14 @@ export class Simulator {
     totalGame: number,
     cutOff: number,
     numberOfDecks: number,
-    hardStrategy: string[][],
-    softStrategy: string[][],
-    pairStrategy: string[][]
-  ): Promise<number> {
+    actionStrategy: ActionStrategy,
+    runningCountStrategy: RunningCountStrategy
+  ): Promise<SimulationResult> {
     return new Promise((resolve) => {
       const cards = new CardDistributor(cutOff, numberOfDecks);
-      const strategy = new ActionStrategy(
-        hardStrategy,
-        softStrategy,
-        pairStrategy
-      );
       cards.shuffle();
       let totalWin = 0;
+      let maxLoss = 0;
       let i = 0;
       const batchSize = 1000; // Number of games to run in each batch
 
@@ -31,8 +33,11 @@ export class Simulator {
         const end = Math.min(i + batchSize, totalGame);
 
         for (; i < end; i++) {
-          const game = runGame(cards, strategy);
+          const basebet = cards.getRunningCount() >= 100 ? 2 : 1;
+          const game = runGame(cards, actionStrategy, basebet);
           totalWin += game.playerWin;
+          maxLoss = Math.min(maxLoss, totalWin);
+          // console.log("after Game " + i + " win: " + totalWin);
 
           if (i % Math.floor(totalGame / 100) === 0) {
             this.progressPercent = Math.floor((i / totalGame) * 100);
@@ -43,8 +48,7 @@ export class Simulator {
           setTimeout(runBatch, 0); // Schedule the next batch
         } else {
           const winPercentage = (totalWin / totalGame) * 100;
-          console.log(`Total win: ${winPercentage}%`);
-          resolve(winPercentage); // Resolve the promise with the win percentage
+          resolve({ winPercentage, totalWin, maxLoss }); // Resolve the promise with the win percentage
         }
       };
 

@@ -4,10 +4,11 @@ type Hand = Card[];
 
 export class PlayerHand {
   private hands: Hand[] = [];
-  public baseBetRatio: number[] = [1];
+  private baseBetRatio: number[];
 
-  public constructor() {
+  public constructor(baseBet: number) {
     this.hands = [[]];
+    this.baseBetRatio = [baseBet];
   }
 
   public hitCard(card: Card, handNumber: number): void {
@@ -72,7 +73,7 @@ export class PlayerHand {
   public splitHand(handNumber: number): void {
     const card = this.hands[handNumber].pop() as Card;
     this.hands.push([card]);
-    this.baseBetRatio.push(1);
+    this.baseBetRatio.push(this.baseBetRatio[handNumber]);
   }
 
   public getHandsCount(): number {

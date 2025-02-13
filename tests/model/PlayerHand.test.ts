@@ -5,7 +5,7 @@ describe("Player Hand test", () => {
   let playerHand: PlayerHand;
 
   beforeEach(() => {
-    playerHand = new PlayerHand();
+    playerHand = new PlayerHand(1);
   });
 
   it("check SumWithoutAce 10", () => {

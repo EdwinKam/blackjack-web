@@ -10,7 +10,7 @@ describe("getPlayAction", () => {
   let actionStrategy: ActionStrategy;
 
   beforeEach(() => {
-    playerHand = new PlayerHand();
+    playerHand = new PlayerHand(1);
     dealerHand = new DealerHand();
     actionStrategy = new ActionStrategy(); // Create an instance of actionStrategy
   });
@@ -67,7 +67,7 @@ describe("getPlayAction - Edge Cases", () => {
   let actionStrategy: ActionStrategy;
 
   beforeEach(() => {
-    playerHand = new PlayerHand();
+    playerHand = new PlayerHand(1);
     dealerHand = new DealerHand();
     actionStrategy = new ActionStrategy(); // Create an instance of actionStrategy
   });

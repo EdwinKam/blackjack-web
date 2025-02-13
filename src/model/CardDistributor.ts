@@ -4,6 +4,7 @@ export class CardDistributor {
   private deck: Deck;
   private cutOff: number;
   private currentIndex: number = 0;
+  private runningCount: number = 0;
 
   constructor(cutOff: number, numberOfDecks: number) {
     this.deck = this.createDeck(numberOfDecks);
@@ -32,15 +33,36 @@ export class CardDistributor {
       this.deck[j] = temp;
     }
     this.currentIndex = 0;
+    this.runningCount = 0;
   }
 
   public dealCard(): Card {
-    return this.deck[this.currentIndex++];
+    const card = this.deck[this.currentIndex++];
+    if (card.getValue() >= 10 || card.getValue() === 1) {
+      this.runningCount--;
+    } else if (card.getValue() <= 6) {
+      this.runningCount++;
+    }
+    return card;
   }
 
   public ifCutCardReachedThenShuffle(): void {
     if (this.currentIndex >= this.deck.length * this.cutOff) {
       this.shuffle();
     }
+  }
+
+  public getRunningCount(): number {
+    return this.runningCount;
+  }
+
+  public getAdjustedRunningCount(): number {
+    return Math.floor(
+      this.runningCount / ((this.deck.length - this.currentIndex) / 52)
+    );
+  }
+
+  public setDeckForTesting(deck: Deck): void {
+    this.deck = deck;
   }
 }
