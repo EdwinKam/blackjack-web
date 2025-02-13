@@ -191,9 +191,9 @@ function GameSimulator() {
             {(simulationResult.simulationTime / 1000).toFixed(2)}s
           </div>
           <div>Win rate: {simulationResult.winPercentage.toFixed(2)}%</div>
-          <div>Total Win: {simulationResult.totalWin}</div>
-          <div>Max win: {simulationResult.maxWin}</div>
-          <div>Max Loss: {simulationResult.maxLoss}</div>
+          <div>Total Win: ${simulationResult.totalWin.toFixed(2)}</div>
+          <div>Max win: ${simulationResult.maxWin.toFixed(2)}</div>
+          <div>Max Loss: ${simulationResult.maxLoss.toFixed(2)}</div>
           <BarChart
             dataMap={simulationResult.sampleTotleWin}
             xLabel="Game Number"
