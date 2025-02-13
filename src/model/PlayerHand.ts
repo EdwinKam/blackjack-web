@@ -97,4 +97,8 @@ export class PlayerHand {
   public onlyHasOneCard(handNumber: number): boolean {
     return this.hands[handNumber].length === 1;
   }
+
+  public getNumberOfCards(handNumber: number): number {
+    return this.hands[handNumber].length;
+  }
 }

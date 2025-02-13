@@ -16,9 +16,9 @@ function StrategyChartConfigurator({
   setPairStrategy: React.Dispatch<React.SetStateAction<string[][]>>;
 }) {
   useEffect(() => {
-    console.log("hardStrategy", hardStrategy);
-    console.log("softStrategy", softStrategy);
-    console.log("pairStrategy", pairStrategy);
+    // console.log("hardStrategy", hardStrategy);
+    // console.log("softStrategy", softStrategy);
+    // console.log("pairStrategy", pairStrategy);
   }, [hardStrategy, softStrategy, pairStrategy]);
 
   const actionSequence: string[] = ["H", "S", "D", "P"];

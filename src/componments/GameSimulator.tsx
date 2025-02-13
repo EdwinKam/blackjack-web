@@ -12,8 +12,8 @@ import BarChart from "./BarChart";
 // import RunningCountConfigurator from "./RunningCountConfigurator";
 
 function GameSimulator() {
-  const [numOfGames, setNumOfGames] = useState(10);
-  const [numOfDecks, setNumOfDecks] = useState(4);
+  const [numOfGames, setNumOfGames] = useState(500);
+  const [numOfDecks, setNumOfDecks] = useState(2);
   const [cutOffRatio, setCutOffRatio] = useState(0.75);
   const [progress, setProgress] = useState(0);
   const [isGameRunning, setIsGameRunning] = useState(false);
@@ -36,7 +36,6 @@ function GameSimulator() {
 
   const runSimulation = async () => {
     setIsGameRunning(true);
-    console.log("Starting a game");
     const simulator = new Simulator();
     setSimulator(simulator);
     const actionStrategy = new ActionStrategy(
@@ -194,9 +193,8 @@ function GameSimulator() {
           <div>Max Loss: {simulationResult.maxLoss}</div>
           <BarChart
             dataMap={simulationResult.sampleTotleWin}
-            label="Rolling Average"
             xLabel="Game Number"
-            yLabel="Rolling Average"
+            yLabel="Player net worth"
           />
         </div>
       )}

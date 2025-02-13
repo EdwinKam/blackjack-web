@@ -1,6 +1,7 @@
 import { ActionStrategy } from "../model/ActionStrategy";
 import { CardDistributor } from "../model/CardDistributor";
 import { RunningCountStrategy } from "../model/RunningCountStrategy";
+import { logger } from "../util/logger";
 import runGame from "./gameRunner";
 
 export interface SimulationResult {
@@ -37,9 +38,20 @@ export class Simulator {
         const end = Math.min(i + batchSize, totalGame);
         sampleTotleWin.set(i, totalWin);
         for (; i < end; i++) {
-          const basebet = cards.getRunningCount() >= 100 ? 2 : 1;
+          if (totalGame < 10000) {
+            sampleTotleWin.set(i, totalWin);
+          }
+          let basebet = 1;
+          // if (cards.getAdjustedRunningCount() > 1) {
+          //   basebet = 1.1;
+          // } else if (cards.getAdjustedRunningCount() >= 3) {
+          //   basebet = 1.2;
+          // } else if (cards.getAdjustedRunningCount() >= 5) {
+          //   basebet = 1.5;
+          // }
           const game = runGame(cards, actionStrategy, basebet);
           totalWin += game.playerWin;
+          logger("basebet: " + basebet + " | total win: " + totalWin);
           maxLoss = Math.min(maxLoss, totalWin);
           if (i % Math.floor(totalGame / 100) === 0) {
             this.progressPercent = Math.floor((i / totalGame) * 100);
