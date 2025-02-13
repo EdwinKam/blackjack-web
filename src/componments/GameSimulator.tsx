@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { Simulator } from "../service/simulator";
+import { SimulationResult, Simulator } from "../service/simulator";
 import StrategyChartConfigurator from "./StrategyChartConfigurator";
 import {
   ActionStrategy,
@@ -8,19 +8,21 @@ import {
   defaultSoftHandStrategy,
 } from "../model/ActionStrategy";
 import { RunningCountStrategy } from "../model/RunningCountStrategy";
+import BarChart from "./BarChart";
 // import RunningCountConfigurator from "./RunningCountConfigurator";
 
 function GameSimulator() {
-  const [numOfGames, setNumOfGames] = useState(10);
-  const [numOfDecks, setNumOfDecks] = useState(4);
+  const [numOfGames, setNumOfGames] = useState(500);
+  const [numOfDecks, setNumOfDecks] = useState(2);
   const [cutOffRatio, setCutOffRatio] = useState(0.75);
   const [progress, setProgress] = useState(0);
   const [isGameRunning, setIsGameRunning] = useState(false);
   const [simulator, setSimulator] = useState<Simulator | null>(null);
   const [simulationResult, setSimulationResult] =
     useState<SimulationResult | null>(null);
-  const [runningCountStrategy, setRunningCountStrategy] =
-    useState<RunningCountStrategy>(new RunningCountStrategy());
+  const [runningCountStrategy] = useState<RunningCountStrategy>(
+    new RunningCountStrategy()
+  );
   const [hardStrategy, setHardStrategy] = useState<string[][]>(
     defaultBlackjackStrategy
   );
@@ -34,7 +36,6 @@ function GameSimulator() {
 
   const runSimulation = async () => {
     setIsGameRunning(true);
-    console.log("Starting a game");
     const simulator = new Simulator();
     setSimulator(simulator);
     const actionStrategy = new ActionStrategy(
@@ -70,7 +71,7 @@ function GameSimulator() {
   };
 
   const decrementGames = () => {
-    setNumOfGames((prev) => Math.max(10000, prev - 100000));
+    setNumOfGames((prev) => Math.max(50, prev - 100000));
   };
 
   const incrementDecks = () => {
@@ -177,15 +178,47 @@ function GameSimulator() {
           +
         </button>
       </div>
-      <button onClick={runSimulation} style={buttonStyle}>
-        Start Simulation
-      </button>
+      {!isGameRunning && (
+        <button onClick={runSimulation} style={buttonStyle}>
+          Start Simulation
+        </button>
+      )}
       {isGameRunning && <div>Progress: {progress.toFixed(2)}%</div>}
       {simulationResult !== null && (
         <div>
+          <h3>strategy: {simulationResult.strategyDescription}</h3>
+          <div>
+            Simulation Time:{" "}
+            {(simulationResult.simulationTime / 1000).toFixed(2)}s
+          </div>
           <div>Win rate: {simulationResult.winPercentage.toFixed(2)}%</div>
-          <div>Total Win: {simulationResult.totalWin}</div>
-          <div>Max Loss: {simulationResult.maxLoss}</div>
+          <div>Total Win: ${simulationResult.totalWin.toFixed(2)}</div>
+          <div>Max win: ${simulationResult.maxWin.toFixed(2)}</div>
+          <div>Max Loss: ${simulationResult.maxLoss.toFixed(2)}</div>
+          <BarChart
+            label="Money Graph"
+            dataMap={simulationResult.sampleTotleWin}
+            xLabel="Game Number"
+            yLabel="Player net worth"
+          />
+          <BarChart
+            label="Running Count Win Rate"
+            dataMap={
+              new Map(
+                Array.from(
+                  simulationResult.runningCountWinTotal.entries(),
+                  ([key, winTotal]) => [
+                    key,
+                    winTotal /
+                      (simulationResult.runningCountGameCount.get(key) || 1),
+                  ]
+                )
+              )
+            }
+            weightMap={simulationResult.runningCountGameCount}
+            xLabel="Game Number"
+            yLabel="Player net worth"
+          />
         </div>
       )}
     </div>

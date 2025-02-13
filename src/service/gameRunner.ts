@@ -3,6 +3,7 @@ import { BlackjackAction } from "../model/BlackjackAction";
 import { CardDistributor } from "../model/CardDistributor";
 import { DealerHand } from "../model/DealerHand";
 import { PlayerHand } from "../model/PlayerHand";
+import { logger } from "../util/logger";
 
 export interface GameResult {
   playerHand: PlayerHand;
@@ -15,7 +16,6 @@ export default function runGame(
   actionStrategy: ActionStrategy,
   baseBet: number
 ): GameResult {
-  cardDistributor.ifCutCardReachedThenShuffle();
   const dealerHand = new DealerHand();
   const playerHand = new PlayerHand(baseBet);
   // console.log("running count" + cardDistributor.getRunningCount());
@@ -28,9 +28,9 @@ export default function runGame(
   if (playerHand.isBlackjack(0) && dealerHand.isBlackjack()) {
     return { playerHand, dealerHand, playerWin: 0 };
   } else if (playerHand.isBlackjack(0)) {
-    return { playerHand, dealerHand, playerWin: 1.5 };
+    return { playerHand, dealerHand, playerWin: 1.5 * baseBet };
   } else if (dealerHand.isBlackjack()) {
-    return { playerHand, dealerHand, playerWin: -1 };
+    return { playerHand, dealerHand, playerWin: -1 * baseBet };
   }
 
   let playHandCount = 1;
@@ -50,6 +50,12 @@ export default function runGame(
         dealerHand,
         handNumber
       );
+      if (
+        playAction === BlackjackAction.Double &&
+        playerHand.getNumberOfCards(handNumber) > 2
+      ) {
+        playAction = BlackjackAction.Hit;
+      }
       switch (playAction) {
         case BlackjackAction.Hit:
           playerHand.hitCard(cardDistributor.dealCard(), handNumber);
@@ -91,9 +97,6 @@ export default function runGame(
       totalWin -= playerHand.getBaseBetRatio(handNumber);
     }
   }
-  // console.log("playerHand", playerHand.toString());
-  // console.log("dealerHand", dealerHand.toString());
-  // console.log("total win", totalWin);
 
   return { playerHand, dealerHand, playerWin: totalWin };
 }

@@ -1,9 +1,9 @@
 import { Card, Deck } from "./Card";
 
 export class CardDistributor {
-  private deck: Deck;
+  public deck: Deck;
   private cutOff: number;
-  private currentIndex: number = 0;
+  public currentIndex: number = 0;
   private runningCount: number = 0;
 
   constructor(cutOff: number, numberOfDecks: number) {
@@ -56,10 +56,12 @@ export class CardDistributor {
     return this.runningCount;
   }
 
+  public getRemainingCard(): number {
+    return this.deck.length - this.currentIndex;
+  }
+
   public getAdjustedRunningCount(): number {
-    return Math.floor(
-      this.runningCount / ((this.deck.length - this.currentIndex) / 52)
-    );
+    return Math.floor(this.runningCount / (this.getRemainingCard() / 52));
   }
 
   public setDeckForTesting(deck: Deck): void {

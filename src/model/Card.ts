@@ -2,6 +2,9 @@ export class Card {
   private rank: number;
 
   constructor(rank: number) {
+    if (rank < 1 || rank > 13) {
+      throw new Error("Invalid rank");
+    }
     this.rank = rank;
   }
 

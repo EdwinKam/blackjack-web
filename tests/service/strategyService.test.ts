@@ -141,4 +141,22 @@ describe("getPlayAction - Edge Cases", () => {
     const action = actionStrategy.getPlayAction(playerHand, dealerHand, 0);
     expect(action).toBe(BlackjackAction.Hit); // Assuming strategy for bust is Stand
   });
+
+  it("player very small card", () => {
+    playerHand.hitCard(new Card(5), 0);
+    playerHand.hitCard(new Card(3), 0);
+    dealerHand.addCard(new Card(4)); // Dealer's face-up card
+
+    const action = actionStrategy.getPlayAction(playerHand, dealerHand, 0);
+    expect(action).toBe(BlackjackAction.Double); // Assuming strategy for bust is Stand
+  });
+
+  it("player very big card", () => {
+    playerHand.hitCard(new Card(10), 0);
+    playerHand.hitCard(new Card(9), 0);
+    dealerHand.addCard(new Card(4)); // Dealer's face-up card
+
+    const action = actionStrategy.getPlayAction(playerHand, dealerHand, 0);
+    expect(action).toBe(BlackjackAction.Stand); // Assuming strategy for bust is Stand
+  });
 });

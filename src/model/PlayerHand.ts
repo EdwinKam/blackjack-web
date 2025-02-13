@@ -16,7 +16,7 @@ export class PlayerHand {
   }
 
   public doubleCard(card: Card, handNumber: number): void {
-    this.baseBetRatio[handNumber] = 2;
+    this.baseBetRatio[handNumber] = this.baseBetRatio[handNumber] * 2;
     this.hands[handNumber].push(card);
   }
 
@@ -96,5 +96,9 @@ export class PlayerHand {
 
   public onlyHasOneCard(handNumber: number): boolean {
     return this.hands[handNumber].length === 1;
+  }
+
+  public getNumberOfCards(handNumber: number): number {
+    return this.hands[handNumber].length;
   }
 }
