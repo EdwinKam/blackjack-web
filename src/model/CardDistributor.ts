@@ -55,4 +55,12 @@ export class CardDistributor {
   public getRunningCount(): number {
     return this.runningCount;
   }
+
+  public getAdjustedRunningCount(): number {
+    return this.runningCount / ((this.deck.length - this.currentIndex) / 52);
+  }
+
+  public setDeckForTesting(deck: Deck): void {
+    this.deck = deck;
+  }
 }
