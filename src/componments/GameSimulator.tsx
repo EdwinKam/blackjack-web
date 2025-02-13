@@ -71,7 +71,7 @@ function GameSimulator() {
   };
 
   const decrementGames = () => {
-    setNumOfGames((prev) => Math.max(10000, prev - 100000));
+    setNumOfGames((prev) => Math.max(50, prev - 100000));
   };
 
   const incrementDecks = () => {
@@ -190,6 +190,7 @@ function GameSimulator() {
           </div>
           <div>Win rate: {simulationResult.winPercentage.toFixed(2)}%</div>
           <div>Total Win: {simulationResult.totalWin}</div>
+          <div>Max win: {simulationResult.maxWin}</div>
           <div>Max Loss: {simulationResult.maxLoss}</div>
           <BarChart
             dataMap={simulationResult.sampleTotleWin}

@@ -8,6 +8,7 @@ export interface SimulationResult {
   winPercentage: number;
   totalWin: number;
   maxLoss: number;
+  maxWin: number;
   sampleTotleWin: Map<number, number>;
   simulationTime: number;
 }
@@ -30,6 +31,7 @@ export class Simulator {
       cards.shuffle();
       let totalWin = 0;
       let maxLoss = 0;
+      let maxWin = 0;
       let i = 0;
       const batchSize = 1000; // Number of games to run in each batch
       const sampleTotleWin = new Map<number, number>();
@@ -42,17 +44,18 @@ export class Simulator {
             sampleTotleWin.set(i, totalWin);
           }
           let basebet = 1;
-          // if (cards.getAdjustedRunningCount() > 1) {
-          //   basebet = 1.1;
-          // } else if (cards.getAdjustedRunningCount() >= 3) {
-          //   basebet = 1.2;
-          // } else if (cards.getAdjustedRunningCount() >= 5) {
-          //   basebet = 1.5;
-          // }
+          if (cards.getAdjustedRunningCount() > 1) {
+            basebet = 1.1;
+          } else if (cards.getAdjustedRunningCount() >= 3) {
+            basebet = 1.5;
+          } else if (cards.getAdjustedRunningCount() >= 5) {
+            basebet = 2;
+          }
           const game = runGame(cards, actionStrategy, basebet);
           totalWin += game.playerWin;
           logger("basebet: " + basebet + " | total win: " + totalWin);
           maxLoss = Math.min(maxLoss, totalWin);
+          maxWin = Math.max(maxWin, totalWin);
           if (i % Math.floor(totalGame / 100) === 0) {
             this.progressPercent = Math.floor((i / totalGame) * 100);
           }
@@ -67,6 +70,7 @@ export class Simulator {
             totalWin,
             maxLoss,
             sampleTotleWin,
+            maxWin,
             simulationTime: Date.now() - startTime,
           });
         }
