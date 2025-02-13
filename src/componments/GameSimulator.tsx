@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { Simulator } from "../service/simulator";
+import { SimulationResult, Simulator } from "../service/simulator";
 import StrategyChartConfigurator from "./StrategyChartConfigurator";
 import {
   ActionStrategy,
@@ -8,6 +8,7 @@ import {
   defaultSoftHandStrategy,
 } from "../model/ActionStrategy";
 import { RunningCountStrategy } from "../model/RunningCountStrategy";
+import BarChart from "./BarChart";
 // import RunningCountConfigurator from "./RunningCountConfigurator";
 
 function GameSimulator() {
@@ -19,8 +20,9 @@ function GameSimulator() {
   const [simulator, setSimulator] = useState<Simulator | null>(null);
   const [simulationResult, setSimulationResult] =
     useState<SimulationResult | null>(null);
-  const [runningCountStrategy, setRunningCountStrategy] =
-    useState<RunningCountStrategy>(new RunningCountStrategy());
+  const [runningCountStrategy] = useState<RunningCountStrategy>(
+    new RunningCountStrategy()
+  );
   const [hardStrategy, setHardStrategy] = useState<string[][]>(
     defaultBlackjackStrategy
   );
@@ -183,9 +185,19 @@ function GameSimulator() {
       {isGameRunning && <div>Progress: {progress.toFixed(2)}%</div>}
       {simulationResult !== null && (
         <div>
+          <div>
+            Simulation Time:{" "}
+            {(simulationResult.simulationTime / 1000).toFixed(2)}s
+          </div>
           <div>Win rate: {simulationResult.winPercentage.toFixed(2)}%</div>
           <div>Total Win: {simulationResult.totalWin}</div>
           <div>Max Loss: {simulationResult.maxLoss}</div>
+          <BarChart
+            dataMap={simulationResult.sampleTotleWin}
+            label="Rolling Average"
+            xLabel="Game Number"
+            yLabel="Rolling Average"
+          />
         </div>
       )}
     </div>

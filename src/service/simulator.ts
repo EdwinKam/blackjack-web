@@ -7,6 +7,8 @@ export interface SimulationResult {
   winPercentage: number;
   totalWin: number;
   maxLoss: number;
+  sampleTotleWin: Map<number, number>;
+  simulationTime: number;
 }
 
 export class Simulator {
@@ -22,23 +24,23 @@ export class Simulator {
     runningCountStrategy: RunningCountStrategy
   ): Promise<SimulationResult> {
     return new Promise((resolve) => {
+      const startTime = Date.now();
       const cards = new CardDistributor(cutOff, numberOfDecks);
       cards.shuffle();
       let totalWin = 0;
       let maxLoss = 0;
       let i = 0;
       const batchSize = 1000; // Number of games to run in each batch
+      const sampleTotleWin = new Map<number, number>();
 
       const runBatch = () => {
         const end = Math.min(i + batchSize, totalGame);
-
+        sampleTotleWin.set(i, totalWin);
         for (; i < end; i++) {
           const basebet = cards.getRunningCount() >= 100 ? 2 : 1;
           const game = runGame(cards, actionStrategy, basebet);
           totalWin += game.playerWin;
           maxLoss = Math.min(maxLoss, totalWin);
-          // console.log("after Game " + i + " win: " + totalWin);
-
           if (i % Math.floor(totalGame / 100) === 0) {
             this.progressPercent = Math.floor((i / totalGame) * 100);
           }
@@ -48,7 +50,13 @@ export class Simulator {
           setTimeout(runBatch, 0); // Schedule the next batch
         } else {
           const winPercentage = (totalWin / totalGame) * 100;
-          resolve({ winPercentage, totalWin, maxLoss }); // Resolve the promise with the win percentage
+          resolve({
+            winPercentage,
+            totalWin,
+            maxLoss,
+            sampleTotleWin,
+            simulationTime: Date.now() - startTime,
+          });
         }
       };
 
