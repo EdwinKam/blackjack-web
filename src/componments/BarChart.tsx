@@ -5,10 +5,11 @@ import {
   BarElement,
   CategoryScale,
   LinearScale,
+  Tooltip,
 } from "chart.js";
 
 // Register the necessary components
-ChartJS.register(BarElement, CategoryScale, LinearScale);
+ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip);
 
 // Define the props type
 interface SampledBarChartProps {
@@ -46,6 +47,12 @@ class SampledBarChart extends Component<SampledBarChartProps> {
       (key) => filteredDataMap.get(key) as number
     );
 
+    // Calculate the total sum of the data points for percentage calculation
+    const totalDataSum = sampledDataPoints.reduce(
+      (sum, value) => sum + value,
+      0
+    );
+
     const data = {
       labels: sampledLabels, // X-axis labels
       datasets: [
@@ -66,6 +73,14 @@ class SampledBarChart extends Component<SampledBarChartProps> {
           display: true,
           position: "top",
         },
+        tooltip: {
+          callbacks: {
+            label: function (context: any) {
+              const value = context.raw;
+              return `${value.toFixed(2)}`;
+            },
+          },
+        },
       },
       scales: {
         x: {
@@ -75,6 +90,9 @@ class SampledBarChart extends Component<SampledBarChartProps> {
           },
         },
         y: {
+          beginAtZero: false, // Do not start the Y-axis at zero
+          min: Math.min(...sampledDataPoints) * 0.95, // Set min to 95% of the smallest value
+          max: Math.max(...sampledDataPoints) * 1.05, // Set max to 105% of the largest value
           title: {
             display: true,
             text: yLabel || "Y-Axis",

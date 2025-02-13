@@ -186,6 +186,7 @@ function GameSimulator() {
       {isGameRunning && <div>Progress: {progress.toFixed(2)}%</div>}
       {simulationResult !== null && (
         <div>
+          <h3>strategy: {simulationResult.strategyDescription}</h3>
           <div>
             Simulation Time:{" "}
             {(simulationResult.simulationTime / 1000).toFixed(2)}s

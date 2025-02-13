@@ -16,7 +16,6 @@ export default function runGame(
   actionStrategy: ActionStrategy,
   baseBet: number
 ): GameResult {
-  cardDistributor.ifCutCardReachedThenShuffle();
   logger(
     "running count: " +
       cardDistributor.getRunningCount() +
@@ -107,7 +106,7 @@ export default function runGame(
     }
   }
   logger("playerHand" + playerHand.toString());
-  logger("dealerHand" + dealerHand.toString);
+  logger("dealerHand" + dealerHand.toString());
 
   return { playerHand, dealerHand, playerWin: totalWin };
 }

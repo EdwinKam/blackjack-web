@@ -13,6 +13,7 @@ export interface SimulationResult {
   simulationTime: number;
   runningCountWinTotal: Map<number, number>;
   runningCountGameCount: Map<number, number>;
+  strategyDescription?: string;
 }
 
 export class Simulator {
@@ -38,16 +39,23 @@ export class Simulator {
       const batchSize = 1000; // Number of games to run in each batch
       const sampleTotleWin = new Map<number, number>();
       const runningCountWinTotal = new Map<number, number>();
+      const runningCountLossTotal = new Map<number, number>();
       const runningCountGameCount = new Map<number, number>();
+      let strategyDescription = "";
 
       const runBatch = () => {
         const end = Math.min(i + batchSize, totalGame);
         sampleTotleWin.set(i, totalWin);
         for (; i < end; i++) {
+          cards.ifCutCardReachedThenShuffle();
           if (totalGame < 10000) {
             sampleTotleWin.set(i, totalWin);
           }
           let basebet = 1;
+          strategyDescription = "adjusted running count > 0 then double bet";
+          if (cards.getAdjustedRunningCount() > 0) {
+            basebet = 2;
+          }
           const preGameRunningCount = cards.getAdjustedRunningCount();
           const game = runGame(cards, actionStrategy, basebet);
           totalWin += game.playerWin;
@@ -60,9 +68,22 @@ export class Simulator {
             currentWinRate + (game.playerWin > 0 ? 1 : 0)
           );
 
+          const currentLossRate =
+            runningCountLossTotal.get(preGameRunningCount) || 0;
+          runningCountLossTotal.set(
+            preGameRunningCount,
+            currentLossRate + (game.playerWin < 0 ? 1 : 0)
+          );
+
           const currentGameCount =
             runningCountGameCount.get(preGameRunningCount) || 0;
-          runningCountGameCount.set(preGameRunningCount, currentGameCount + 1);
+          runningCountGameCount.set(
+            preGameRunningCount,
+            currentGameCount + (game.playerWin != 0 ? 1 : 0) // dont count tie
+          );
+          // console.log("wintotal", runningCountWinTotal);
+          // console.log("losstotal", runningCountLossTotal);
+          // console.log("toal", runningCountGameCount);
 
           logger("basebet: " + basebet + " | total win: " + totalWin);
           maxLoss = Math.min(maxLoss, totalWin);
@@ -85,6 +106,7 @@ export class Simulator {
             simulationTime: Date.now() - startTime,
             runningCountWinTotal,
             runningCountGameCount,
+            strategyDescription,
           });
         }
       };
