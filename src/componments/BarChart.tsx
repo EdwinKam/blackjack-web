@@ -67,7 +67,7 @@ class SampledBarChart extends Component<SampledBarChartProps> {
     return (
       <div>
         {label && <h2>{label}</h2>}
-        <Bar data={data} options={options} />
+        <Bar data={data} />
       </div>
     );
   }
