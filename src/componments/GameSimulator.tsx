@@ -178,9 +178,11 @@ function GameSimulator() {
           +
         </button>
       </div>
-      <button onClick={runSimulation} style={buttonStyle}>
-        Start Simulation
-      </button>
+      {!isGameRunning && (
+        <button onClick={runSimulation} style={buttonStyle}>
+          Start Simulation
+        </button>
+      )}
       {isGameRunning && <div>Progress: {progress.toFixed(2)}%</div>}
       {simulationResult !== null && (
         <div>
