@@ -195,7 +195,27 @@ function GameSimulator() {
           <div>Max win: ${simulationResult.maxWin.toFixed(2)}</div>
           <div>Max Loss: ${simulationResult.maxLoss.toFixed(2)}</div>
           <BarChart
+            label="Money Graph"
             dataMap={simulationResult.sampleTotleWin}
+            xLabel="Game Number"
+            yLabel="Player net worth"
+          />
+          <BarChart
+            label="Running Count Win Rate"
+            isPercentage={true}
+            dataMap={
+              new Map(
+                Array.from(
+                  simulationResult.runningCountWinTotal.entries(),
+                  ([key, winTotal]) => [
+                    key,
+                    winTotal /
+                      (simulationResult.runningCountGameCount.get(key) || 1),
+                  ]
+                )
+              )
+            }
+            weightMap={simulationResult.runningCountGameCount}
             xLabel="Game Number"
             yLabel="Player net worth"
           />

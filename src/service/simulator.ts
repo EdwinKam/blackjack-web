@@ -11,6 +11,8 @@ export interface SimulationResult {
   maxWin: number;
   sampleTotleWin: Map<number, number>;
   simulationTime: number;
+  runningCountWinTotal: Map<number, number>;
+  runningCountGameCount: Map<number, number>;
 }
 
 export class Simulator {
@@ -35,6 +37,8 @@ export class Simulator {
       let i = 0;
       const batchSize = 1000; // Number of games to run in each batch
       const sampleTotleWin = new Map<number, number>();
+      const runningCountWinTotal = new Map<number, number>();
+      const runningCountGameCount = new Map<number, number>();
 
       const runBatch = () => {
         const end = Math.min(i + batchSize, totalGame);
@@ -44,15 +48,22 @@ export class Simulator {
             sampleTotleWin.set(i, totalWin);
           }
           let basebet = 1;
-          if (cards.getAdjustedRunningCount() > 1) {
-            basebet = 1.1;
-          } else if (cards.getAdjustedRunningCount() >= 3) {
-            basebet = 1.5;
-          } else if (cards.getAdjustedRunningCount() >= 5) {
-            basebet = 2;
-          }
+          const preGameRunningCount = cards.getAdjustedRunningCount();
           const game = runGame(cards, actionStrategy, basebet);
           totalWin += game.playerWin;
+
+          // Update win rate and game count
+          const currentWinRate =
+            runningCountWinTotal.get(preGameRunningCount) || 0;
+          runningCountWinTotal.set(
+            preGameRunningCount,
+            currentWinRate + (game.playerWin > 0 ? 1 : 0)
+          );
+
+          const currentGameCount =
+            runningCountGameCount.get(preGameRunningCount) || 0;
+          runningCountGameCount.set(preGameRunningCount, currentGameCount + 1);
+
           logger("basebet: " + basebet + " | total win: " + totalWin);
           maxLoss = Math.min(maxLoss, totalWin);
           maxWin = Math.max(maxWin, totalWin);
@@ -72,6 +83,8 @@ export class Simulator {
             sampleTotleWin,
             maxWin,
             simulationTime: Date.now() - startTime,
+            runningCountWinTotal,
+            runningCountGameCount,
           });
         }
       };
